@@ -1,0 +1,22 @@
+.table {
+	text-align: center;
+}
+
+#table-header {
+	background-color: rgba(51, 153, 204, 0.5);
+}
+
+#table-header th {
+	color: black;
+	font-weight: bold;
+}
+
+.table-striped > tbody > tr:nth-last-child(odd) > td {
+	background-color: #b4dced;
+}
+
+.acciones i {
+	margin-left: 5px;
+	font-size: 20px;
+	cursor: pointer;
+}
