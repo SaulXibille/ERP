@@ -79,14 +79,14 @@ header p {
 	display: block;
 }
 
-.btn {
+.boton {
 	background-color: #91c9e8;
 	color: black;
 	font-weight: bold;
 	cursor: pointer;
 }
 
-.btn:hover {
+.boton:hover {
 	color: black;
 	background-color: rgba(51, 153, 204, 0.5);
 }

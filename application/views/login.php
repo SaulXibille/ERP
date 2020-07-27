@@ -17,7 +17,7 @@
     <div class="card card-container">
         <i class="fas fa-crow logo"></i>
         <p id="profile-name" class="profile-name-card"></p>
-        <form class="form-signin" method="POST" action="<?php echo base_url(); ?>Login/ingresar">
+        <form class="form-signin" method="POST" action="<?php echo base_url(); ?>Login/ingresar" id="form_login">
             <span id="reauth-email" class="reauth-email"></span>
             <input type="email" id="correo" name="correo" class="form-control" placeholder="Correo Electronico" required autofocus>
             <input type="password" id="contraseña" name="contraseña" class="form-control" placeholder="Contraseña" required>
