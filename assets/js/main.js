@@ -1,5 +1,5 @@
 $(document).ready(function () {
-	$("#tablaColaboradores").DataTable({
+	$("#tabla").DataTable({
 		//para cambiar el lenguaje a español
 		language: {
 			lengthMenu: "Mostrar _MENU_ registros",

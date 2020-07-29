@@ -54,7 +54,7 @@
     </button>
   </div>
 
-  <table id="example" class="table table-striped">
+  <table id="tabla" class="table table-striped">
     <thead>
       <tr id="table-header">
         <th scope="col">Razon Social</th>

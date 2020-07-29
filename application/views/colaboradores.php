@@ -69,7 +69,7 @@
     </button>
   </div>
 
-  <table id="tablaColaboradores" class="table table-striped">
+  <table id="tabla" class="table table-striped">
     <thead>
       <tr id="table-header">
         <th scope="col">Nombre(s)</th>
@@ -114,8 +114,8 @@
           }
         }
 
-        $('#tablaColaboradores').DataTable().destroy();
-        $('#tablaColaboradores').DataTable({
+        $('#tabla').DataTable().destroy();
+        $('#tabla').DataTable({
           language: {
             lengthMenu: "Mostrar _MENU_ registros",
             zeroRecords: "No se encontraron resultados",
@@ -175,7 +175,7 @@
         },
         success: function(data) {
           if(data.respuesta == 'exito') {
-            $('#tablaColaboradores').DataTable().destroy();
+            $('#tabla').DataTable().destroy();
             obtenerEmpleados();
             $("#exampleModalCenter").modal('hide');
             toastr["success"](data.mensaje);
