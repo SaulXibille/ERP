@@ -10,7 +10,7 @@
 
             <li><a href="#"><i class="fas fa-warehouse"></i>Almacen</a></li>
             <li class="submodulo"><a href="<?php echo base_url()."productos" ?>"><i class="fas fa-shopping-cart"></i>Productos</a></li>
-            <li class="submodulo"><a href="#"><i class="fas fa-handshake"></i>Proveedores</a></li>
+            <li class="submodulo"><a href="<?php echo base_url()."proveedores" ?>"><i class="fas fa-handshake"></i>Proveedores</a></li>
             <li class="submodulo"><a href="#"><i class="fas fa-chart-line"></i>Ventas</a></li>
         </ul> 
     </div>
