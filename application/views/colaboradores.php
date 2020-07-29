@@ -12,7 +12,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form>
+        <form action="" method="POST" id="FormAgregar">
           <div class="form-group">
             <div class="form-row">
               <div class="form-group col-md-6">
@@ -40,10 +40,10 @@
           <div class="form-group">
             <div class="form-row">
               <div class="form-group col-md-4">
-                <label for="inputState">Puesto</label>
-                <select id="inputState" class="form-control">
-                  <option selected>Seleccione un puesto</option>
-                  <option>...</option>
+                <label for="puesto">Puesto</label>
+                <select class="form-control" id="puesto" name="puesto">
+                  <option selected value="0">Seleccione un puesto</option>
+                  <option value="1">Administrador</option>
                 </select>
               </div>
             </div>
@@ -69,7 +69,7 @@
     </button>
   </div>
 
-  <table id="example" class="table table-striped">
+  <table id="tablaColaboradores" class="table table-striped">
     <thead>
       <tr id="table-header">
         <th scope="col">Nombre(s)</th>
@@ -81,14 +81,14 @@
       </tr>
     </thead>
     <tbody id="contenidoTabla">
-      <tr>
+      <!-- <tr>
         <td>Ejemplo</td>
         <td>Ejemplo</td>
         <td>Ejemplo</td>
         <td>Ejemplo</td>
         <td>Ejemplo</td>
         <td class="acciones"><i class="fas fa-pencil-alt"></i> <i class="fas fa-trash-alt"></i> <i class="fas fa-info"></i></td>
-      </tr>
+      </tr> -->
     </tbody>
   </table>
 
@@ -97,12 +97,96 @@
 <?php $this->load->view('template/footer'); ?>
 
 <script>
+
+  // CONSULTA - MOSTRAR EN LA TABLA
+  function obtenerEmpleados() {
+    $.ajax({
+      url: "<?php echo base_url(); ?>Colaboradores/obtenerEmpleados",
+      type: "POST",
+      dataType: "json",
+      success: function(data) {
+        
+        for (var i = 0; i < data.posts.length; i++) {
+          if (data.posts[i].status == 1) {
+            data.posts[i].status = "Activo";
+          } else {
+            data.posts[i].status = "Inactivo";
+          }
+        }
+
+        $('#tablaColaboradores').DataTable().destroy();
+        $('#tablaColaboradores').DataTable({
+          language: {
+            lengthMenu: "Mostrar _MENU_ registros",
+            zeroRecords: "No se encontraron resultados",
+            info:
+              "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            infoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+            infoFiltered: "(filtrado de un total de _MAX_ registros)",
+            sSearch: "Buscar:",
+            oPaginate: {
+              sFirst: "Primero",
+              sLast: "Último",
+              sNext: "Siguiente",
+              sPrevious: "Anterior",
+            },
+            sProcessing: "Procesando...",
+          },
+          "data" : data.posts,
+          "columns": [
+            {"data": "nombres"},
+            {"data": "apellidoP"},
+            {"data": "apellidoM"},
+            {"data": "nombrePuesto"},
+            {"data": "status"},
+            {"render": function(data, type, row, meta) {
+              var a = `<i class="fas fa-pencil-alt"></i> <i class="fas fa-trash-alt"></i> <i class="fas fa-info"></i>`;
+              return a;
+            }}
+          ]
+        });
+
+      }
+    });
+  }
+
+  // AGREGAR
   $(document).on("click", "#agregar", function(e) {
     e.preventDefault();
-    var nombre = $("#nombre").val();
+    var nombres = $("#nombre").val();
     var apellidoP = $("#apellidoP").val();
     var apellidoM = $("#apellidoM").val();
     var correo = $("#correo").val();
+    var puesto = $("#puesto").val();
 
+    if(nombres === "" || apellidoP === "" || apellidoM === "" || correo === "" || puesto == 0) {
+      toastr["error"]("Completar todos los campos");
+    } else {
+      $.ajax({
+        url: "<?php echo base_url(); ?>Colaboradores/agregar",
+        type: "POST",
+        dataType: "json",
+        data: {
+          nombres: nombres,
+          apellidoP: apellidoP,
+          apellidoM: apellidoM,
+          correo: correo,
+          idPuestos: puesto
+        },
+        success: function(data) {
+          if(data.respuesta == 'exito') {
+            $('#tablaColaboradores').DataTable().destroy();
+            obtenerEmpleados();
+            $("#exampleModalCenter").modal('hide');
+            toastr["success"](data.mensaje);
+          } else {
+            toastr["error"](data.mensaje);
+          }
+        }
+      });
+      document.getElementById("FormAgregar").reset();
+    }
   });
+
+  obtenerEmpleados();
 </script>

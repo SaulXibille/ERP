@@ -9,17 +9,21 @@ class Colaboradores_modelo extends CI_Model {
 
 	public function obtenerEmpleados(){
 
-    $this->db->select('e.nombres, e.apellidoP, e.apellidoM, p.nombrePuesto, e.estado');
+    $this->db->select('e.nombres, e.apellidoP, e.apellidoM, p.nombrePuesto, e.status, e.correo');
     $this->db->from('empleados e');
-    $this->db->join('puestos p', 'e.idPuesto = p.idPuesto');
+    $this->db->join('puestos p', 'e.idPuestos = p.idPuestos');
 
     $res = $this->db->get();
 
     if($res->num_rows() > 0) {
       $r = $res->row();
-      return 1;
+      return $res->result();
     }else {
       return 0;
     }
-	}
+  }
+  
+  public function agregarEmpleado($data) {
+    return $this->db->insert('empleados', $data);
+  }
 }
