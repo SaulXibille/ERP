@@ -40,7 +40,7 @@
           <div class="form-group">
             <div class="form-row">
               <div class="form-group col-md-6">
-                <label for="inputState">Puesto</label>
+                <label for="inputState">Proveedor</label>
                 <select id="inputState" class="form-control">
                   <option selected>Seleccione un proveedor</option>
                   <option>...</option>
