@@ -113,7 +113,7 @@
 <?php $this->load->view('template/footer'); ?>
 
 <script>
-  $(document).on("click", "#agregar", function(e) {
+  $(document).on("click", "#agregar", function(productos) {
     productos.preventDefault();
     var nomProducto = $("#nomProducto").val();
     var costo = $("#costo").val();
