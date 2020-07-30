@@ -49,11 +49,16 @@ header p {
 	font-weight: bold;
 }
 
-.container {
+.padre {
 	/* border: 1px solid red; */
 	margin-left: 204px;
 	margin-top: 52px;
-	width: 110%;
+}
+
+.hijo {
+	/* border: 1px solid yellow; */
+	width: 90%;
+	margin: 0 auto;
 }
 
 .title {
@@ -70,7 +75,7 @@ header p {
 	align-items: center;
 	flex-flow: wrap-reverse;
 	margin-bottom: 40px;
-	margin-top: 70px !important;
+	margin-top: 70px;
 }
 
 .agregar {

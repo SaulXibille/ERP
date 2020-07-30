@@ -1,4 +1,4 @@
-<div class="wrapper">
+<div class="wrapper" >
     <div class="sidebar">
         <h2>Sidebar</h2>
         <ul>
