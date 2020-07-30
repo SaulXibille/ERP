@@ -9,9 +9,10 @@ class Colaboradores_modelo extends CI_Model {
 
 	public function obtenerEmpleados(){
 
-    $this->db->select('e.nombres, e.apellidoP, e.apellidoM, p.nombrePuesto, e.status, e.correo');
+    $this->db->select('e.nombres, e.apellidoP, e.apellidoM, p.nombrePuesto, e.status, e.correo, e.idEmpleados');
     $this->db->from('empleados e');
     $this->db->join('puestos p', 'e.idPuestos = p.idPuestos');
+    $this->db->where('e.status', 1);
 
     $res = $this->db->get();
 
@@ -25,5 +26,26 @@ class Colaboradores_modelo extends CI_Model {
   
   public function agregarEmpleado($data) {
     return $this->db->insert('empleados', $data);
+  }
+
+  public function eliminarEmpleado($idEmpleado) {
+    $this->db->where('idEmpleados', $idEmpleado);
+		$this->db->set('status', 0);
+		$this->db->update('empleados');
+		return ($this->db->affected_rows() > 0);
+  }
+
+  public function modificarEmpleado($idEmpleado) {
+    $this->db->select("*");
+    $this->db->from('empleados');
+    $this->db->where('idEmpleados', $idEmpleado);
+    $res = $this->db->get();
+    if(count($res->result()) > 0) {
+      return $res->row();
+    }
+  }
+
+  public function actualizarEmpleado($data) {
+    return $this->db->update('empleados', $data, array('idEmpleados' => $data['idEmpleados']));
   }
 }

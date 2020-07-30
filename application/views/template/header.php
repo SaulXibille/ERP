@@ -19,12 +19,12 @@
   <link rel="stylesheet" href="<?php echo base_url('assets/datatables/datatables.min.css'); ?>">
   <link rel="stylesheet" href="<?php echo base_url('assets/datatables/DataTables-1.10.21/css/dataTables.bootstrap4.min.css'); ?>">
   <!-- FONT AWESOME -->
-  <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+  <!-- <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css"> -->
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
 </head>
 <header>
-  <div class="logout"><p>Administrador</p><i class="fas fa-power-off"></i></div>
+  <div class="logout"><p>Administrador</p><a href="<?php echo base_url()?>Login/logout"><i class="fas fa-power-off"></i></a></div>
 </header>
 
 

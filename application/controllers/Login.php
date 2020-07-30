@@ -9,8 +9,7 @@ class Login extends CI_Controller {
 	}
 
 	public function index() {
-		$data['mensaje'] = '';
-		$this->load->view('login', $data);
+		$this->load->view('login');
 	}
 
 	public function ingresar() {
@@ -19,11 +18,31 @@ class Login extends CI_Controller {
 		
 		$res = $this->Login_modelo->ingresar($correo, $contraseña);
 
-		if ($res == 1) {
-				$this->load->view('inicio');
+		if($res) {
+			$s_data = array(
+				's_idUsuario' => $res->idUsuarios,
+				's_idEmpleado' => $res->idEmpleados,
+				's_nombreUsuario' => $res->nombres,
+				's_puesto' => $res->nombrePuesto,
+				's_status' => $res->status,
+				'is_logged' => TRUE,
+			);
+	
+			$this->session->set_userdata($s_data);
 		} else {
-			$data['mensaje'] = "Usuario Inexistente";
-			$this->load->view('login', $data);
+			echo "error";
 		}
+
+		// echo json_encode(array('url' => base_url('Colaboradores/colaboradores')));
+		// $this->load->view('Colaboradores/colaboradores');
+	}
+
+	public function logout() {
+		$this->session->sess_destroy();//-destruye la sesion actual
+    header('Location: '.base_url());
+	}
+
+	public function validacion() {
+		echo "hola";
 	}
 }

@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- BOOTSTRAP -->
+  <script type="text/javascript" src="<?php echo base_url('assets/js/jquery-3.5.1.min.js'); ?>"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
   <!-- ESTILOS PERSONALIZADOS -->
   <link rel="stylesheet" href="<?php echo base_url('assets/css/login.css'); ?>">
   <!-- FONT AWESOME -->
-  <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
   <script src="https://kit.fontawesome.com/5aa15e27e7.js" crossorigin="anonymous"></script>
   <title>Inicio de sesion</title>
 </head>
@@ -16,21 +16,60 @@
   <div class="container">
     <div class="card card-container">
         <i class="fas fa-crow logo"></i>
-        <p id="profile-name" class="profile-name-card"></p>
-        <form class="form-signin" method="POST" action="<?php echo base_url(); ?>Login/ingresar" id="form_login">
+        <form class="form-signin" id="form_login" name="form_login">
             <span id="reauth-email" class="reauth-email"></span>
-            <input type="email" id="correo" name="correo" class="form-control" placeholder="Correo Electronico" required autofocus>
+            <input type="email" id="correo" name="correo" class="form-control" placeholder="Correo Electronico" required>
             <input type="password" id="contraseña" name="contraseña" class="form-control" placeholder="Contraseña" required>
-            <?php 
-              if($mensaje == ''){
-
-              }else {
-                echo '<div class="alert alert-danger"><strong>'.$mensaje.'</strong> </div>'; 
-              }
-            ?>
-            <button class="btn btn-lg btn-block btn-signin" type="submit">Iniciar Sesion</button>
+            <div class="alert alert-danger" role="alert" id="error">
+              Usuario Invalido!
+            </div>
+            <div class="alert alert-danger" role="alert" id="vacio">
+              Completar Campos!
+            </div>
+            <div class="alert alert-danger" role="alert" id="e_correo">
+              Ingrese un correo valido!
+            </div>
+            <button class="btn btn-lg btn-block btn-signin" id="btn_login">Iniciar Sesion</button>
         </form>
     </div>
   </div>
+
+
+  <script>
+    $('#btn_login').click(function(e){
+      e.preventDefault();
+      if($('#correo').val() != "" && $('#contraseña').val() != "" ){
+
+        if($("#correo").val().indexOf('@', 0) == -1 || $("#correo").val().indexOf('.', 0) == -1){
+          $('#e_correo').show();
+          $('#e_correo').delay(4500).hide(600);
+          return false;
+        } else {
+          var formData = new FormData($("#form_login")[0]);
+          $.ajax({
+            url: "<?php echo base_url();?>Login/ingresar",
+            type : "POST",
+            data:formData,
+            cache:false,
+            contentType:false,
+            processData:false,
+            success:function(res) {
+              console.log(res);
+              if(res == "error") {
+                $('#error').show();
+                $('#error').delay(4500).hide(600);
+              } else {
+                window.location.href = "<?php echo base_url(); ?>Inicio";
+              }
+            } 
+          });
+        }
+			} else {
+        $('#vacio').show();
+        $('#vacio').delay(4500).hide(600);
+      }
+    });
+  </script>
+
 </body>
 </html>

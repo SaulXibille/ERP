@@ -9,7 +9,7 @@ class Login_modelo extends CI_Model {
 
 	public function ingresar($correo, $contraseña){
 
-    $this->db->select('e.nombres, e.apellidoP, e.apellidoM, p.nombrePuesto, u.idUsuarios');
+    $this->db->select('e.nombres, e.apellidoP, e.apellidoM, p.nombrePuesto, u.idUsuarios, e.idEmpleados, u.status');
     $this->db->from('empleados e');
     $this->db->join('puestos p', 'e.idPuestos = p.idPuestos');
     $this->db->join('usuarios u', 'e.idEmpleados = u.idEmpleados');
@@ -20,18 +20,10 @@ class Login_modelo extends CI_Model {
     $res = $this->db->get();
 
     if($res->num_rows() > 0) {
-      $r = $res->row();
-
-      $s_usuario = array(
-        's_idUsuario' => $r->idUsuarios,
-        's_usuario' => $r->nombres.", ".$r->apellidoP.", ".$r->apellidoM
-      );
-
-      $this->session->set_userdata($s_usuario);
-
-      return 1;
-    }else {
-      return 0;
+      return $res->row();
     }
-	}
+    else{
+      return false;
+    }
+  }
 }
