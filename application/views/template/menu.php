@@ -2,7 +2,7 @@
     <div class="sidebar">
         <h2>Sidebar</h2>
         <ul>
-            <li><a href="#"><i class="fas fa-home"></i>Inicio</a></li>
+            <li><a href="<?php echo base_url()."Inicio" ?>"><i class="fas fa-home"></i>Inicio</a></li>
 
             <li><a href="#"><i class="fas fa-user"></i>RRH</a></li>
             <li class="submodulo"><a href="<?php echo base_url()."Colaboradores" ?>"><i class="fas fa-users"></i>Colaboradores</a></li>

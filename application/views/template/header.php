@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title></title>
+  <title><?php echo $titulo;?></title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
@@ -24,7 +24,7 @@
 
 </head>
 <header>
-  <div class="logout"><p>Administrador</p><a href="<?php echo base_url()?>Login/logout"><i class="fas fa-power-off"></i></a></div>
+  <div class="logout"><p>Administrador - <?php echo $this->session->userdata('s_nombreUsuario');?></p><a href="<?php echo base_url()?>Login/logout"><i class="fas fa-power-off"></i></a></div>
 </header>
 
 

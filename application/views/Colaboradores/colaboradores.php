@@ -3,6 +3,7 @@
 
 <?php $this->load->view('Colaboradores/modalAgregar'); ?>
 <?php $this->load->view('Colaboradores/modalEditar'); ?>
+<?php $this->load->view('Colaboradores/modalDetalle'); ?>
 
 <div class="padre">
   <div class="hijo">
@@ -85,7 +86,7 @@
             {"data": "nombrePuesto"},
             {"data": "status"},
             {"render": function(data, type, row, meta) {
-              var a = `<i class="fas fa-pencil-alt" value="${row.idEmpleados}" id="editar"></i> <i class="fas fa-trash-alt" value="${row.idEmpleados}" id="eliminar"></i> <i class="fas fa-info" value="${row.idEmpleados}" id="detalle"></i>`;
+              var a = `<i class="fas fa-pencil-alt" value="${row.idEmpleados}" id="editar"></i> <i class="fas fa-trash-alt" value="${row.idEmpleados}" id="eliminar" alt="Eliminar"></i> <i class="fas fa-info" value="${row.idEmpleados}" id="detalle"></i>`;
               return a;
             }}
           ]
@@ -198,7 +199,7 @@
   $(document).on("click", "#editar", function(e) {
     e.preventDefault();
     var idEmpleado = $(this).attr("value");
-    console.log(`Id: ${idEmpleado}`);
+    // console.log(`Id: ${idEmpleado}`);
 
     $.ajax({
       url: "<?php echo base_url()?>Colaboradores/modificar",
@@ -262,6 +263,33 @@
     }
   });
 
+  // CONSULTAR - DETALLE
+  $(document).on("click", "#detalle", function(e) {
+    e.preventDefault();
+    var idEmpleado = $(this).attr("value");
+    // console.log(`Id: ${idEmpleado}`);
+
+    $.ajax({
+      url: "<?php echo base_url()?>Colaboradores/detalle",
+      type: "POST",
+      dataType: "json",
+      data: {
+        idEmpleado: idEmpleado
+      },
+      success: function(data) {
+        // $('#tabla').DataTable().destroy();
+        // obtenerEmpleados();
+        console.log(data);
+        $('#modalDetalle').modal('show');
+        $('#d_id').val(data.post.idEmpleados);
+        $('#d_nombre').val(data.post.nombres);
+        $('#d_apellidoP').val(data.post.apellidoP);
+        $('#d_apellidoM').val(data.post.apellidoM);
+        $('#d_correo').val(data.post.correo);
+        $(`#d_puesto > option[value=${data.post.idPuestos}]`).attr("selected",true);
+      }
+    });
+  });
 
   obtenerEmpleados();
 </script>

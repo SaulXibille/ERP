@@ -32,13 +32,13 @@ header i:hover {
 
 header p {
 	font-size: 15px;
-	margin: 15px 0px 10px 28px;
+	margin: 15px 10px 10px 28px;
 	flex: 2;
 	text-align: center;
 }
 
 .logout {
-	width: 200px;
+	/* width: 400px; */
 	height: 50px;
 	float: right;
 	display: flex;

@@ -9,7 +9,10 @@ class Inicio extends CI_Controller{
 
     public function index(){
       if($this->session->userdata('is_logged')) {
-        $this->load->view('inicio');
+        $data = array(
+          'titulo' => 'Inicio',
+         );
+        $this->load->view('inicio', $data);
       } else {
         $this->load->view('login');
       }

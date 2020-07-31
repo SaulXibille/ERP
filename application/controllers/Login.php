@@ -41,8 +41,4 @@ class Login extends CI_Controller {
 		$this->session->sess_destroy();//-destruye la sesion actual
     header('Location: '.base_url());
 	}
-
-	public function validacion() {
-		echo "hola";
-	}
 }

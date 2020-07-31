@@ -48,4 +48,14 @@ class Colaboradores_modelo extends CI_Model {
   public function actualizarEmpleado($data) {
     return $this->db->update('empleados', $data, array('idEmpleados' => $data['idEmpleados']));
   }
+
+  public function detalleEmpleado($idEmpleado) {
+    $this->db->select("*");
+    $this->db->from('empleados');
+    $this->db->where('idEmpleados', $idEmpleado);
+    $res = $this->db->get();
+    if(count($res->result()) > 0) {
+      return $res->row();
+    }
+  }
 }

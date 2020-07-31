@@ -12,7 +12,10 @@ class Colaboradores extends CI_Controller {
 
 	public function index() {
 		if($this->session->userdata('is_logged')) {
-			$this->load->view('Colaboradores/colaboradores');
+			$data = array(
+				'titulo' => 'Colaboradores',
+ 			);
+			$this->load->view('Colaboradores/colaboradores', $data);
 		} else {
 			$this->load->view('login');
 		}
@@ -113,6 +116,21 @@ class Colaboradores extends CI_Controller {
 
 			echo json_encode($data);
 			// echo "ajax request";
+		} else {
+
+		}
+	}
+
+	public function detalle() {
+		if($this->input->is_ajax_request()) {
+			$idEmpleado = $this->input->post('idEmpleado');
+
+			if($post = $this->Colaboradores_modelo->detalleEmpleado($idEmpleado)){
+				$data = array('respuesta' => 'exito', 'post' => $post);
+			} else {
+				$data = array('respuesta' => 'error', 'mensaje' => 'No se encontro el registro');
+			}
+			echo json_encode($data);
 		} else {
 
 		}
