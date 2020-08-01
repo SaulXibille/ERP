@@ -13,30 +13,20 @@
         Agregar
       </button>
     </div>
-  
-    <table id="tabla" class="table table-striped">
-      <thead>
-        <tr id="table-header">
-          <th scope="col">Nombre(s)</th>
-          <th scope="col">A. Paterno</th>
-          <th scope="col">A. Materno</th>
-          <th scope="col">Puesto</th>
-          <th scope="col">Estado</th>
-          <th scope="col">Acción</th>
-        </tr>
-      </thead>
-      <tbody id="contenidoTabla">
-        <!-- <tr>
-          <td>Ejemplo</td>
-          <td>Ejemplo</td>
-          <td>Ejemplo</td>
-          <td>Ejemplo</td>
-          <td>Ejemplo</td>
-          <td class="acciones"><i class="fas fa-pencil-alt"></i> <i class="fas fa-trash-alt"></i> <i class="fas fa-info"></i></td>
-        </tr> -->
-      </tbody>
-    </table>
-  
+    <div class="table-responsive">
+      <table id="tabla" class="table table-striped table-bordered">
+        <thead>
+          <tr id="table-header">
+            <th scope="col">Nombre(s)</th>
+            <th scope="col">A. Paterno</th>
+            <th scope="col">A. Materno</th>
+            <th scope="col">Puesto</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Acción</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
   </div>
 </div>
 
@@ -62,6 +52,7 @@
 
         $('#tabla').DataTable().destroy();
         $('#tabla').DataTable({
+          responsive: true,
           language: {
             lengthMenu: "Mostrar _MENU_ registros",
             zeroRecords: "No se encontraron resultados",
@@ -78,6 +69,17 @@
             },
             sProcessing: "Procesando...",
           },
+          dom: "<'row' <'col-sm-12 col-md-4'l> <'col-sm-12 col-md-4 excel'B> <'col-sm-12 col-md-4'f> >" +
+              "<'row'<'col-sm-12'tr>>" +
+              "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+          buttons: [
+            {
+              extend: 'excelHtml5',
+              text: '<i class="fas fa-file-excel"></i>',
+              titleAttr: 'Exportar a Excel',
+              className: 'btn btn-success'
+            },
+          ],
           "data" : data.posts,
           "columns": [
             {"data": "nombres"},
@@ -86,7 +88,7 @@
             {"data": "nombrePuesto"},
             {"data": "status"},
             {"render": function(data, type, row, meta) {
-              var a = `<i class="fas fa-pencil-alt" value="${row.idEmpleados}" id="editar"></i> <i class="fas fa-trash-alt" value="${row.idEmpleados}" id="eliminar" alt="Eliminar"></i> <i class="fas fa-info" value="${row.idEmpleados}" id="detalle"></i>`;
+              var a = `<i class="fas fa-pencil-alt" value="${row.idEmpleados}" id="editar" title="Editar"></i> <i class="fas fa-trash-alt" value="${row.idEmpleados}" id="eliminar" title="Eliminar"></i> <i class="fas fa-info" value="${row.idEmpleados}" id="detalle" title="Detalles"></i>`;
               return a;
             }}
           ]

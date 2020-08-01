@@ -18,9 +18,14 @@ header {
 	z-index: 1020;
 }
 
+header a {
+	text-decoration: none;
+	color: black;
+}
+
 header i {
 	font-size: 25px;
-	display: inline-block;
+	/* display: inline-block; */
 	padding: 12px 22px 10px 10px;
 }
 

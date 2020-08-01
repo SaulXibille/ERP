@@ -17,6 +17,17 @@ $(document).ready(function () {
 			},
 			sProcessing: "Procesando...",
 		},
+		dom: "<'row' <'col-sm-12 col-md-4'l> <'col-sm-12 col-md-4 excel'B> <'col-sm-12 col-md-4'f> >" +
+				"<'row'<'col-sm-12'tr>>" +
+				"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+		buttons: [
+			{
+				extend: 'excelHtml5',
+				text: '<i class="fas fa-file-excel"></i>',
+				titleAttr: 'Exportar a Excel',
+				className: 'btn btn-success'
+			},
+		],
 	});
 });
 

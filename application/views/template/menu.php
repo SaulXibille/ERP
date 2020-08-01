@@ -1,6 +1,6 @@
 <div class="wrapper" >
     <div class="sidebar">
-        <h2>Sidebar</h2>
+        <!-- <h2>Sidebar</h2> -->
         <ul>
             <li><a href="<?php echo base_url()."Inicio" ?>"><i class="fas fa-home"></i>Inicio</a></li>
 
