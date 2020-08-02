@@ -52,7 +52,7 @@
 
         $('#tabla').DataTable().destroy();
         $('#tabla').DataTable({
-          responsive: true,
+          // responsive: true,
           language: {
             lengthMenu: "Mostrar _MENU_ registros",
             zeroRecords: "No se encontraron resultados",

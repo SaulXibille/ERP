@@ -5,6 +5,7 @@
 <!-- DataTables -->
 <script type="text/javascript" src="<?php echo base_url('assets/datatables/datatables.min.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/main.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo base_url('assets/js/menu.js'); ?>"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/datatables/Buttons-1.6.2/js/dataTables.buttons.min.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/datatables/JSZip-2.5.0/jszip.min.js'); ?>"></script>
