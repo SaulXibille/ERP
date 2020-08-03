@@ -1,29 +1,29 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Colaboradores extends CI_Controller {
+class Usuarios extends CI_Controller {
 
 	public function __construct() {
 		parent::__construct();
-		$this->load->model('Colaboradores_modelo');
-		$this->load->model('Puestos_modelo');
+    $this->load->model('Usuarios_modelo');
+    $this->load->model('Colaboradores_modelo');
 		$this->load->helper(array('form', 'url'));
 		$this->load->library(array('form_validation', 'session'));
 	}
 
 	public function index() {
 		if($this->session->userdata('is_logged')) {
-			$data['titulo'] = 'Colaboradores';
-      $data['puestos'] = $this->Puestos_modelo->obtenerPuestos();
-			$this->load->view('Colaboradores/colaboradores', $data);
+      $data['titulo'] = 'Usuarios';
+      $data['colaboradores'] = $this->Colaboradores_modelo->obtenerEmpleados();
+			$this->load->view('Usuarios/usuarios', $data);
 		} else {
 			$this->load->view('login');
 		}
 	}
 
-	public function obtenerEmpleados() {
+	public function obtenerUsuarios() {
 		if($this->input->is_ajax_request()) {
-			if($posts = $this->Colaboradores_modelo->obtenerEmpleados()) {
+			if($posts = $this->Usuarios_modelo->obtenerUsuarios()) {
 				$data = array('response' => 'success', 'posts' => $posts);
 			} else {
 				$data = array('response' => 'error', 'message' => 'No se encontraron registros');
@@ -36,16 +36,16 @@ class Colaboradores extends CI_Controller {
 
 	public function agregar() {
 		if($this->input->is_ajax_request()) {
-			$this->form_validation->set_rules('nombres', 'Nombres', 'required');
-			$this->form_validation->set_rules('apellidoP', 'Apellido Paterno', 'required');
-			$this->form_validation->set_rules('apellidoM', 'Apellido Materno', 'required');
-			$this->form_validation->set_rules('idPuestos', 'Puesto', 'required');
-			$this->form_validation->set_rules('correo', 'Correo', 'required|valid_email');
+      $this->form_validation->set_rules('correo', 'Correo', 'required|valid_email');
+      $this->form_validation->set_rules('contraseña', 'Contraseña', 'required');
+			$this->form_validation->set_rules('idEmpleados', 'Colaborador', 'required');
+
 			if($this->form_validation->run() == FALSE) {
 				$data = array('respuesta' => 'error', 'mensaje' => validation_errors());
 			} else {
-				$ajax_data = $this->input->post();
-				if($this->Colaboradores_modelo->agregarEmpleado($ajax_data)){
+        $ajax_data = $this->input->post(array('contraseña', 'correo', 'idEmpleados'));
+        // print_r($ajax_data);
+				if($this->Usuarios_modelo->agregarUsuario($ajax_data)){
 					$data = array('respuesta' => 'exito', 'mensaje' => 'Añadido con exito');
 				} else {
 					$data = array('respuesta' => 'error', 'mensaje' => 'Error al agregar');
@@ -61,9 +61,9 @@ class Colaboradores extends CI_Controller {
 
 	public function eliminar() {
 		if($this->input->is_ajax_request()) {
-			$idEmpleado = $this->input->post('idEmpleado');
+			$idUsuario = $this->input->post('idUsuario');
 
-			if($this->Colaboradores_modelo->eliminarEmpleado($idEmpleado)){
+			if($this->Usuarios_modelo->eliminarUsuario($idUsuario)){
 				$data = array('respuesta' => 'exito');
 			} else {
 				$data = array('respuesta' => 'error');
@@ -76,9 +76,9 @@ class Colaboradores extends CI_Controller {
 
 	public function modificar() {
 		if($this->input->is_ajax_request()) {
-			$idEmpleado = $this->input->post('idEmpleado');
+			$idUsuario = $this->input->post('idUsuario');
 
-			if($post = $this->Colaboradores_modelo->modificarEmpleado($idEmpleado)){
+			if($post = $this->Usuarios_modelo->modificarUsuario($idUsuario)){
 				$data = array('respuesta' => 'exito', 'post' => $post);
 			} else {
 				$data = array('respuesta' => 'error', 'mensaje' => 'No se encontro el registro');
@@ -91,23 +91,19 @@ class Colaboradores extends CI_Controller {
 
 	public function actualizar() {
 		if($this->input->is_ajax_request()) {
-			$this->form_validation->set_rules('nombres', 'Nombres', 'required');
-			$this->form_validation->set_rules('apellidoP', 'Apellido Paterno', 'required');
-			$this->form_validation->set_rules('apellidoM', 'Apellido Materno', 'required');
-			$this->form_validation->set_rules('idPuestos', 'Puesto', 'required');
 			$this->form_validation->set_rules('correo', 'Correo', 'required|valid_email');
+      $this->form_validation->set_rules('contraseña', 'Contraseña', 'required');
+			$this->form_validation->set_rules('idEmpleados', 'Colaborador', 'required');
 
 			if($this->form_validation->run() == FALSE) {
 				$data = array('respuesta' => 'error', 'mensaje' => validation_errors());
 			} else {
-				$data['idEmpleados'] = $this->input->post('idEmpleados');
-				$data['nombres'] = $this->input->post('nombres');
-				$data['apellidoP'] = $this->input->post('apellidoP');
-				$data['apellidoM'] = $this->input->post('apellidoM');
+        $data['idEmpleados'] = $this->input->post('idEmpleados');
+        $data['contraseña'] = $this->input->post('contraseña');
 				$data['correo'] = $this->input->post('correo');
-				$data['idPuestos'] = $this->input->post('idPuestos');
+				$data['idUsuarios'] = $this->input->post('idUsuarios');
 
-				if($this->Colaboradores_modelo->actualizarEmpleado($data)){
+				if($this->Usuarios_modelo->actualizarUsuario($data)){
 					$data = array('respuesta' => 'exito', 'mensaje' => 'Actualizado con exito');
 				} else {
 					$data = array('respuesta' => 'error', 'mensaje' => 'Error al actualizar');
@@ -123,9 +119,9 @@ class Colaboradores extends CI_Controller {
 
 	public function detalle() {
 		if($this->input->is_ajax_request()) {
-			$idEmpleado = $this->input->post('idEmpleado');
+			$idUsuario = $this->input->post('idUsuario');
 
-			if($post = $this->Colaboradores_modelo->detalleEmpleado($idEmpleado)){
+			if($post = $this->Usuarios_modelo->detalleUsuario($idUsuario)){
 				$data = array('respuesta' => 'exito', 'post' => $post);
 			} else {
 				$data = array('respuesta' => 'error', 'mensaje' => 'No se encontro el registro');

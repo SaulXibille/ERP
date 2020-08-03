@@ -1,30 +1,3 @@
-<!-- <div class="wrapper" >
-    <div class="sidebar">
-        <ul>
-            <li><a href="<?php echo base_url()."Inicio" ?>"><i class="fas fa-home"></i>Inicio</a></li>
-
-            <li><a href="#"><i class="fas fa-user"></i>RRH</a></li>
-            <li class="submodulo"><a href="#"><i class="fas fa-wallet"></i>Nominas</a></li>
-            <li class="submodulo"><a href="#"><i class="fas fa-wallet"></i>Salarios</a></li>
-            <li class="submodulo"><a href="#"><i class="fas fa-wallet"></i>Puestos</a></li>
-
-            <li><a href="#"><i class="fas fa-user"></i>Personal</a></li>
-            <li class="submodulo"><a href="<?php echo base_url()."Colaboradores" ?>"><i class="fas fa-users"></i>Colaboradores</a></li>
-            <li class="submodulo"><a href="<?php echo base_url()."Usuarios" ?>"><i class="fas fa-users"></i>Usuarios</a></li>
-
-            <li><a href="#"><i class="fas fa-warehouse"></i>Almacen</a></li>
-            <li class="submodulo"><a href="<?php echo base_url()."Productos" ?>"><i class="fas fa-shopping-cart"></i>Productos</a></li>
-            <li class="submodulo"><a href="<?php echo base_url()."Proveedores" ?>"><i class="fas fa-handshake"></i>Proveedores</a></li>
-
-            <li><a href="#"><i class="fas fa-warehouse"></i>Contabilidad</a></li>
-            <li class="submodulo"><a href="#"><i class="fas fa-chart-line"></i>Egresos</a></li>
-            <li class="submodulo"><a href="#"><i class="fas fa-chart-line"></i>Ingresos</a></li>
-
-            <li><a href="#"><i class="fas fa-warehouse"></i>Ventas</a></li>
-            <li class="submodulo"><a href="#"><i class="fas fa-chart-line"></i>Ventas</a></li>
-        </ul> 
-    </div>
-</div> -->
 <div class="wrapper">
     <nav class="sidebar">
         <ul>
