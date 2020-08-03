@@ -12,7 +12,7 @@ class Colaboradores extends CI_Controller {
 
 	public function index() {
 		if($this->session->userdata('is_logged')) {
-			$data['titulo'] = 'Usuarios';
+			$data['titulo'] = 'Colaboradores';
 			$this->load->view('Colaboradores/colaboradores', $data);
 		} else {
 			$this->load->view('login');
