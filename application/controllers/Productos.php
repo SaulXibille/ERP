@@ -11,9 +11,7 @@ class Productos extends CI_Controller{
 
     public function index(){
         if($this->session->userdata('is_logged')) {
-			$data = array(
-				'titulo' => 'Productos',
- 			);
+			 $data['titulo'] = 'Productos';
 			$this->load->view('Productos/productos', $data);
 		} else {
 			$this->load->view('login');

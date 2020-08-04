@@ -1,27 +1,29 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Proveedores extends CI_Controller {
+class Nominas extends CI_Controller {
 
 	public function __construct() {
 		parent::__construct();
-		$this->load->model('Proveedores_modelo');
+		$this->load->model('Nominas_modelo');
+		$this->load->model('Colaboradores_modelo');
 		$this->load->helper(array('form', 'url'));
 		$this->load->library(array('form_validation', 'session'));
 	}
 
 	public function index() {
 		if($this->session->userdata('is_logged')) {
-			$data['titulo'] = 'Proveedores'; 
-			$this->load->view('Proveedores/proveedores', $data);
+			$data['titulo'] = 'Nominas';
+			$data['empleados'] = $this->Colaboradores_modelo->obtenerEmpleados();
+			$this->load->view('Nominas/nominas', $data);
 		} else {
 			$this->load->view('login');
 		}
 	}
 
-	public function obtenerProveedores() {
+	public function obtenerNominas() {
 		if($this->input->is_ajax_request()) {
-			if($posts = $this->Proveedores_modelo->obtenerProveedores()) {
+			if($posts = $this->Nominas_modelo->obtenerNominas()) {
 				$data = array('response' => 'success', 'posts' => $posts);
 			} else {
 				$data = array('response' => 'error', 'message' => 'No se encontraron registros');
@@ -31,18 +33,18 @@ class Proveedores extends CI_Controller {
 			
 		}
 	}
-	
+
 	public function agregar() {
 		if($this->input->is_ajax_request()) {
-			$this->form_validation->set_rules('razonSocial', 'Razon Social', 'required');
-			$this->form_validation->set_rules('rfc', 'RFC', 'required');
-			$this->form_validation->set_rules('giro', 'Giro', 'required');
-			
+			$this->form_validation->set_rules('idEmpleados', 'Empleado', 'required');
+			$this->form_validation->set_rules('sueldo', 'Sueldo', 'required');
+			$this->form_validation->set_rules('imss', 'NSS', 'required');
+			$this->form_validation->set_rules('pension', 'Pension', 'required');
 			if($this->form_validation->run() == FALSE) {
 				$data = array('respuesta' => 'error', 'mensaje' => validation_errors());
 			} else {
 				$ajax_data = $this->input->post();
-				if($this->Proveedores_modelo->agregarProveedor($ajax_data)){
+				if($this->Nominas_modelo->agregarNomina($ajax_data)){
 					$data = array('respuesta' => 'exito', 'mensaje' => 'Añadido con exito');
 				} else {
 					$data = array('respuesta' => 'error', 'mensaje' => 'Error al agregar');
@@ -55,12 +57,12 @@ class Proveedores extends CI_Controller {
 			
 		}
 	}
-	
+
 	public function eliminar() {
 		if($this->input->is_ajax_request()) {
-			$idProveedor = $this->input->post('idProveedor');
+			$idNomina = $this->input->post('idNomina');
 
-			if($this->Proveedores_modelo->eliminarProveedor($idProveedor)){
+			if($this->Nominas_modelo->eliminarNomina($idNomina)){
 				$data = array('respuesta' => 'exito');
 			} else {
 				$data = array('respuesta' => 'error');
@@ -70,12 +72,12 @@ class Proveedores extends CI_Controller {
 
 		}
 	}
-	
+
 	public function modificar() {
 		if($this->input->is_ajax_request()) {
-			$idProveedor = $this->input->post('idProveedor');
+			$idNomina = $this->input->post('idNomina');
 
-			if($post = $this->Proveedores_modelo->modificarProveedor($idProveedor)){
+			if($post = $this->Nominas_modelo->modificarNomina($idNomina)){
 				$data = array('respuesta' => 'exito', 'post' => $post);
 			} else {
 				$data = array('respuesta' => 'error', 'mensaje' => 'No se encontro el registro');
@@ -85,22 +87,23 @@ class Proveedores extends CI_Controller {
 
 		}
 	}
-	
+
 	public function actualizar() {
 		if($this->input->is_ajax_request()) {
-			$this->form_validation->set_rules('razonSocial', 'Razon Social', 'required');
-			$this->form_validation->set_rules('rfc', 'RFC', 'required');
-			$this->form_validation->set_rules('giro', 'Giro', 'required');
-
+			$this->form_validation->set_rules('idEmpleados', 'Empleado', 'required');
+			$this->form_validation->set_rules('sueldo', 'Sueldo', 'required');
+			$this->form_validation->set_rules('imss', 'NSS', 'required');
+			$this->form_validation->set_rules('pension', 'Pension', 'required');
 			if($this->form_validation->run() == FALSE) {
 				$data = array('respuesta' => 'error', 'mensaje' => validation_errors());
 			} else {
-				$data['idProveedores'] = $this->input->post('idProveedores');
-				$data['razonSocial'] = $this->input->post('razonSocial');
-				$data['rfc'] = $this->input->post('rfc');
-				$data['giro'] = $this->input->post('giro');
+				$data['idNominas'] = $this->input->post('idNominas');
+				$data['sueldo'] = $this->input->post('sueldo');
+				$data['imss'] = $this->input->post('imss');
+				$data['pension'] = $this->input->post('pension');
+				$data['idEmpleados'] = $this->input->post('idEmpleados');
 
-				if($this->Proveedores_modelo->actualizarProveedor($data)){
+				if($this->Nominas_modelo->actualizarNomina($data)){
 					$data = array('respuesta' => 'exito', 'mensaje' => 'Actualizado con exito');
 				} else {
 					$data = array('respuesta' => 'error', 'mensaje' => 'Error al actualizar');
@@ -113,12 +116,12 @@ class Proveedores extends CI_Controller {
 
 		}
 	}
-	
+
 	public function detalle() {
 		if($this->input->is_ajax_request()) {
-			$idProveedor = $this->input->post('idProveedor');
+			$idNomina = $this->input->post('idNomina');
 
-			if($post = $this->Proveedores_modelo->detalleProveedor($idProveedor)){
+			if($post = $this->Nominas_modelo->detalleNomina($idNomina)){
 				$data = array('respuesta' => 'exito', 'post' => $post);
 			} else {
 				$data = array('respuesta' => 'error', 'mensaje' => 'No se encontro el registro');

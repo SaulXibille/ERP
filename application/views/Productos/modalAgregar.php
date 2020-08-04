@@ -32,7 +32,9 @@
                             <label for="proveedor">Proveedor</label>
                             <select class="form-control" id="proveedor" name="proveedor">
                                 <option selected value="0">Seleccione un proveedor</option>
-                                <option value="1">Xibusinness</option>
+                                <?php foreach ($proveedores as $proveedor) {
+                                    echo '<option value="'.$proveedor->idProveedores.'">'.$proveedor->razonSocial.'</option>';
+                                }?>
                             </select>
                         </div>
                     </div>
