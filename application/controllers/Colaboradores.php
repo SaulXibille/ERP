@@ -6,6 +6,7 @@ class Colaboradores extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('Colaboradores_modelo');
+		$this->load->model('Puestos_modelo');
 		$this->load->helper(array('form', 'url'));
 		$this->load->library(array('form_validation', 'session'));
 	}
@@ -13,6 +14,7 @@ class Colaboradores extends CI_Controller {
 	public function index() {
 		if($this->session->userdata('is_logged')) {
 			$data['titulo'] = 'Colaboradores';
+			$data['puestos'] = $this->Puestos_modelo->obtenerPuestos();
 			$this->load->view('Colaboradores/colaboradores', $data);
 		} else {
 			$this->load->view('login');
