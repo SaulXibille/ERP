@@ -13,8 +13,9 @@
         Agregar
       </button>
     </div>
+    
     <div id="filtroo">
-      <label for="filtro" class="" style="width:">Mostrar:</label>
+      <label for="filtro">Mostrar:</label>
       <select class="form-control" id="filtro">
         <option value="">Todos</option>
         <option value="1">Activos</option>
@@ -114,8 +115,8 @@ $(document).ready(function() {
         sProcessing: "Procesando...",
       },
       lengthMenu: [10, 20, 50, 100],
-      scrollY: 400,
-      scroller: true,
+      // scrollY: 400,
+      // scroller: true,
       dom: "<'row' <'col-sm-12 col-md-4'l> <'col-sm-12 col-md-4 excel'B> <'col-sm-12 col-md-4'f> >" +
           "<'row'<'col-sm-12'tr>>" +
           "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",

@@ -21,6 +21,21 @@ class Usuarios extends CI_Controller {
 		}
 	}
 
+	public function filtrarUsuarios() {
+		if($this->input->is_ajax_request()) {
+			$status = $this->input->post('status');
+
+			if($posts = $this->Usuarios_modelo->filtrarUsuarios($status)){
+				$data = array('respuesta' => 'exito', 'posts' => $posts);
+			} else {
+				$data = array('respuesta' => 'error', 'mensaje' => 'No se encontro el registro');
+			}
+			echo json_encode($data);
+		} else {
+
+		}
+	}
+
 	public function obtenerUsuarios() {
 		if($this->input->is_ajax_request()) {
 			if($posts = $this->Usuarios_modelo->obtenerUsuarios()) {
@@ -59,11 +74,12 @@ class Usuarios extends CI_Controller {
 		}
 	}
 
-	public function eliminar() {
+	public function cambiarStatus() {
 		if($this->input->is_ajax_request()) {
 			$idUsuario = $this->input->post('idUsuario');
+			$status = $this->input->post('status');
 
-			if($this->Usuarios_modelo->eliminarUsuario($idUsuario)){
+			if($this->Usuarios_modelo->cambiarStatus($idUsuario, $status)){
 				$data = array('respuesta' => 'exito');
 			} else {
 				$data = array('respuesta' => 'error');

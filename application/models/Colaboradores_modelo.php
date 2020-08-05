@@ -41,8 +41,6 @@ class Colaboradores_modelo extends CI_Model {
     }
   }
 
-
-
   public function filtrarEmpleados($status) {
     $this->db->select('e.nombres, e.apellidoP, e.apellidoM, p.nombrePuesto, e.status, e.correo, e.idEmpleados');
     $this->db->from('empleados e');
