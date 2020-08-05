@@ -1,9 +1,9 @@
 <?php $this->load->view('template/header'); ?>
 <?php $this->load->view('template/menu'); ?>
 
-<?php $this->load->view('Colaboradores/modalAgregar'); ?>
-<?php $this->load->view('Colaboradores/modalEditar'); ?>
-<?php $this->load->view('Colaboradores/modalDetalle'); ?>
+<?php $this->load->view('Puestos/modalAgregar'); ?>
+<?php $this->load->view('Puestos/modalEditar'); ?>
+<?php $this->load->view('Puestos/modalDetalle'); ?>
 
 <div class="padre">
   <div class="hijo">
@@ -20,7 +20,6 @@
             <th scope="col">Puesto</th>
             <th scope="col">Entrada</th>
             <th scope="col">Salida</th>
-            <th scope="col">Salario</th>
             <th scope="col">Estado</th>
             <th scope="col">Acción</th>
           </tr>
@@ -85,7 +84,6 @@
             {"data": "nombrePuesto"},
             {"data": "entrada"},
             {"data": "salida"},
-            {"data": "salario"},
             {"data": "status"},
             {"render": function(data, type, row, meta) {
               var a = `<i class="fas fa-pencil-alt" value="${row.idPuestos}" id="editar" title="Editar"></i> <i class="fas fa-trash-alt" value="${row.idPuestos}" id="eliminar" title="Eliminar"></i> <i class="fas fa-info" value="${row.idPuestos}" id="detalle" title="Detalles"></i>`;
@@ -101,30 +99,26 @@
   // AGREGAR
   $(document).on("click", "#agregar", function(e) {
     e.preventDefault();
-    var nombres = $("#nombre").val();
-    var apellidoP = $("#apellidoP").val();
-    var apellidoM = $("#apellidoM").val();
-    var correo = $("#correo").val();
-    var puesto = $("#puesto").val();
+    var nombrePuesto = $("#nombrePuesto").val();
+    var entrada = $("#entrada").val();
+    var salida = $("#salida").val();
 
-    if(nombres === "" || apellidoP === "" || apellidoM === "" || correo === "" || puesto == 0) {
+    if(nombrePuesto === "" || entrada === "" || salida === "") {
       toastr["error"]("Completar todos los campos");
     } else {
       $.ajax({
-        url: "<?php echo base_url(); ?>Colaboradores/agregar",
+        url: "<?php echo base_url(); ?>Puestos/agregar",
         type: "POST",
         dataType: "json",
         data: {
-          nombres: nombres,
-          apellidoP: apellidoP,
-          apellidoM: apellidoM,
-          correo: correo,
-          idPuestos: puesto
+          nombrePuesto: nombrePuesto,
+          entrada: entrada,
+          salida: salida,
         },
         success: function(data) {
           if(data.respuesta == 'exito') {
             $('#tabla').DataTable().destroy();
-            obtenerEmpleados();
+            obtenerPuestos();
             $("#exampleModalCenter").modal('hide');
             toastr["success"](data.mensaje);
           } else {
@@ -139,7 +133,7 @@
   // ELIMINAR
   $(document).on("click", "#eliminar", function(e) {
     e.preventDefault();
-    var idEmpleado = $(this).attr("value");
+    var idPuesto = $(this).attr("value");
 
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
@@ -160,15 +154,15 @@
       if (result.value) {
 
         $.ajax({
-          url: "<?php echo base_url()?>Colaboradores/eliminar",
+          url: "<?php echo base_url()?>Puestos/eliminar",
           type: "POST",
           dataType: "json",
           data: {
-            idEmpleado: idEmpleado
+            idPuesto: idPuesto
           },
           success: function(data) {
             $('#tabla').DataTable().destroy();
-            obtenerEmpleados();
+            obtenerPuestos();
             if(data.respuesta == "exito") {
               swalWithBootstrapButtons.fire(
                 'Eliminado!',
@@ -200,27 +194,22 @@
   // EDITAR
   $(document).on("click", "#editar", function(e) {
     e.preventDefault();
-    var idEmpleado = $(this).attr("value");
+    var idPuesto = $(this).attr("value");
     // console.log(`Id: ${idEmpleado}`);
 
     $.ajax({
-      url: "<?php echo base_url()?>Colaboradores/modificar",
+      url: "<?php echo base_url()?>Puestos/modificar",
       type: "POST",
       dataType: "json",
       data: {
-        idEmpleado: idEmpleado
+        idPuesto: idPuesto
       },
       success: function(data) {
-        // $('#tabla').DataTable().destroy();
-        // obtenerEmpleados();
-        console.log(data);
         $('#modalEditar').modal('show');
-        $('#e_id').val(data.post.idEmpleados);
-        $('#e_nombre').val(data.post.nombres);
-        $('#e_apellidoP').val(data.post.apellidoP);
-        $('#e_apellidoM').val(data.post.apellidoM);
-        $('#e_correo').val(data.post.correo);
-        $(`#e_puesto > option[value=${data.post.idPuestos}]`).attr("selected",true);
+        $('#e_id').val(data.post.idPuestos);
+        $('#e_nombrePuesto').val(data.post.nombrePuesto);
+        $('#e_entrada').val(data.post.entrada);
+        $('#e_salida').val(data.post.salida);
       }
     });
   });
@@ -229,32 +218,28 @@
   $(document).on("click", "#actualizar", function(e) {
     e.preventDefault();
 
-    var idEmpleados = $('#e_id').val();
-    var nombres = $('#e_nombre').val();
-    var apellidoP = $('#e_apellidoP').val();
-    var apellidoM = $('#e_apellidoM').val();
-    var correo = $('#e_correo').val();
-    var puesto = $("#e_puesto").val();
+    var idPuestos = $('#e_id').val();
+    var nombrePuesto = $("#e_nombrePuesto").val();
+    var entrada = $("#e_entrada").val();
+    var salida = $("#e_salida").val();
 
-    if(nombres === "" || apellidoP === "" || apellidoM === "" || correo === "" || puesto == 0) {
+    if(nombrePuesto === "" || entrada === "" || salida === "") {
       toastr["error"]("Completar todos los campos");
     } else {
       $.ajax({
-        url: "<?php echo base_url()?>Colaboradores/actualizar",
+        url: "<?php echo base_url()?>Puestos/actualizar",
         type: "POST",
         dataType: "json",
         data: {
-          idEmpleados: idEmpleados,
-          nombres: nombres,
-          apellidoP: apellidoP,
-          apellidoM: apellidoM,
-          correo: correo,
-          idPuestos: puesto
+          idPuestos: idPuestos,
+          nombrePuesto: nombrePuesto,
+          entrada: entrada,
+          salida: salida
         },
         success: function(data) {
           if(data.respuesta == 'exito') {
             $('#tabla').DataTable().destroy();
-            obtenerEmpleados();
+            obtenerPuestos();
             $("#modalEditar").modal('hide');
             toastr["success"](data.mensaje);
           } else {
@@ -268,27 +253,22 @@
   // CONSULTAR - DETALLE
   $(document).on("click", "#detalle", function(e) {
     e.preventDefault();
-    var idEmpleado = $(this).attr("value");
+    var idPuesto = $(this).attr("value");
     // console.log(`Id: ${idEmpleado}`);
 
     $.ajax({
-      url: "<?php echo base_url()?>Colaboradores/detalle",
+      url: "<?php echo base_url()?>Puestos/detalle",
       type: "POST",
       dataType: "json",
       data: {
-        idEmpleado: idEmpleado
+        idPuesto: idPuesto
       },
       success: function(data) {
-        // $('#tabla').DataTable().destroy();
-        // obtenerEmpleados();
-        console.log(data);
         $('#modalDetalle').modal('show');
-        $('#d_id').val(data.post.idEmpleados);
-        $('#d_nombre').val(data.post.nombres);
-        $('#d_apellidoP').val(data.post.apellidoP);
-        $('#d_apellidoM').val(data.post.apellidoM);
-        $('#d_correo').val(data.post.correo);
-        $(`#d_puesto > option[value=${data.post.idPuestos}]`).attr("selected",true);
+        $('#d_id').val(data.post.idPuestos);
+        $('#d_nombrePuesto').val(data.post.nombrePuesto);
+        $('#d_entrada').val(data.post.entrada);
+        $('#d_salida').val(data.post.salida);
       }
     });
   });

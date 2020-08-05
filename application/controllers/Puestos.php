@@ -34,16 +34,16 @@ class Puestos extends CI_Controller {
 
 	public function agregar() {
 		if($this->input->is_ajax_request()) {
-      $this->form_validation->set_rules('correo', 'Correo', 'required|valid_email');
-      $this->form_validation->set_rules('contraseña', 'Contraseña', 'required');
-			$this->form_validation->set_rules('idEmpleados', 'Colaborador', 'required');
+      $this->form_validation->set_rules('nombrePuesto', 'Nombre Puesto', 'required');
+      $this->form_validation->set_rules('entrada', 'Entrada', 'required');
+			$this->form_validation->set_rules('salida', 'Salida', 'required');
 
 			if($this->form_validation->run() == FALSE) {
 				$data = array('respuesta' => 'error', 'mensaje' => validation_errors());
 			} else {
-        $ajax_data = $this->input->post(array('contraseña', 'correo', 'idEmpleados'));
+        $ajax_data = $this->input->post();
         // print_r($ajax_data);
-				if($this->Usuarios_modelo->agregarUsuario($ajax_data)){
+				if($this->Puestos_modelo->agregarPuesto($ajax_data)){
 					$data = array('respuesta' => 'exito', 'mensaje' => 'Añadido con exito');
 				} else {
 					$data = array('respuesta' => 'error', 'mensaje' => 'Error al agregar');
@@ -59,9 +59,9 @@ class Puestos extends CI_Controller {
 
 	public function eliminar() {
 		if($this->input->is_ajax_request()) {
-			$idUsuario = $this->input->post('idUsuario');
+			$idPuesto = $this->input->post('idPuesto');
 
-			if($this->Usuarios_modelo->eliminarUsuario($idUsuario)){
+			if($this->Puestos_modelo->eliminarPuesto($idPuesto)){
 				$data = array('respuesta' => 'exito');
 			} else {
 				$data = array('respuesta' => 'error');
@@ -74,9 +74,9 @@ class Puestos extends CI_Controller {
 
 	public function modificar() {
 		if($this->input->is_ajax_request()) {
-			$idUsuario = $this->input->post('idUsuario');
+			$idPuesto = $this->input->post('idPuesto');
 
-			if($post = $this->Usuarios_modelo->modificarUsuario($idUsuario)){
+			if($post = $this->Puestos_modelo->modificarPuesto($idPuesto)){
 				$data = array('respuesta' => 'exito', 'post' => $post);
 			} else {
 				$data = array('respuesta' => 'error', 'mensaje' => 'No se encontro el registro');
@@ -89,19 +89,19 @@ class Puestos extends CI_Controller {
 
 	public function actualizar() {
 		if($this->input->is_ajax_request()) {
-			$this->form_validation->set_rules('correo', 'Correo', 'required|valid_email');
-      $this->form_validation->set_rules('contraseña', 'Contraseña', 'required');
-			$this->form_validation->set_rules('idEmpleados', 'Colaborador', 'required');
+			$this->form_validation->set_rules('nombrePuesto', 'Nombre Puesto', 'required');
+      $this->form_validation->set_rules('entrada', 'Entrada', 'required');
+			$this->form_validation->set_rules('salida', 'Salida', 'required');
 
 			if($this->form_validation->run() == FALSE) {
 				$data = array('respuesta' => 'error', 'mensaje' => validation_errors());
 			} else {
-        $data['idEmpleados'] = $this->input->post('idEmpleados');
-        $data['contraseña'] = $this->input->post('contraseña');
-				$data['correo'] = $this->input->post('correo');
-				$data['idUsuarios'] = $this->input->post('idUsuarios');
+        $data['idPuestos'] = $this->input->post('idPuestos');
+        $data['nombrePuesto'] = $this->input->post('nombrePuesto');
+				$data['entrada'] = $this->input->post('entrada');
+				$data['salida'] = $this->input->post('salida');
 
-				if($this->Usuarios_modelo->actualizarUsuario($data)){
+				if($this->Puestos_modelo->actualizarPuesto($data)){
 					$data = array('respuesta' => 'exito', 'mensaje' => 'Actualizado con exito');
 				} else {
 					$data = array('respuesta' => 'error', 'mensaje' => 'Error al actualizar');
@@ -117,9 +117,9 @@ class Puestos extends CI_Controller {
 
 	public function detalle() {
 		if($this->input->is_ajax_request()) {
-			$idUsuario = $this->input->post('idUsuario');
+			$idPuesto = $this->input->post('idPuesto');
 
-			if($post = $this->Usuarios_modelo->detalleUsuario($idUsuario)){
+			if($post = $this->Puestos_modelo->detallePuesto($idPuesto)){
 				$data = array('respuesta' => 'exito', 'post' => $post);
 			} else {
 				$data = array('respuesta' => 'error', 'mensaje' => 'No se encontro el registro');

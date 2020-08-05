@@ -23,35 +23,35 @@ class Puestos_modelo extends CI_Model {
     }
   }
   
-  public function agregarUsuario($data) {
-    return $this->db->insert('usuarios', $data);
+  public function agregarPuesto($data) {
+    return $this->db->insert('puestos', $data);
   }
 
-  public function eliminarUsuario($idUsuario) {
-    $this->db->where('idUsuarios', $idUsuario);
+  public function eliminarPuesto($idPuesto) {
+    $this->db->where('idPuestos', $idPuesto);
 		$this->db->set('status', 0);
-		$this->db->update('usuarios');
+		$this->db->update('puestos');
 		return ($this->db->affected_rows() > 0);
   }
 
-  public function modificarUsuario($idUsuario) {
+  public function modificarPuesto($idPuesto) {
     $this->db->select("*");
-    $this->db->from('usuarios');
-    $this->db->where('idUsuarios', $idUsuario);
+    $this->db->from('puestos');
+    $this->db->where('idPuestos', $idPuesto);
     $res = $this->db->get();
     if(count($res->result()) > 0) {
       return $res->row();
     }
   }
 
-  public function actualizarUsuario($data) {
-    return $this->db->update('usuarios', $data, array('idUsuarios' => $data['idUsuarios']));
+  public function actualizarPuesto($data) {
+    return $this->db->update('puestos', $data, array('idPuestos' => $data['idPuestos']));
   }
 
-  public function detalleUsuario($idUsuario) {
+  public function detallePuesto($idPuesto) {
     $this->db->select("*");
-    $this->db->from('usuarios');
-    $this->db->where('idUsuarios', $idUsuario);
+    $this->db->from('puestos');
+    $this->db->where('idPuestos', $idPuesto);
     $res = $this->db->get();
     if(count($res->result()) > 0) {
       return $res->row();

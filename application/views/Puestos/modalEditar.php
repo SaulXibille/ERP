@@ -3,7 +3,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header" style="background-color: #91c9e8">
-        <h5 class="modal-title" id="exampleModalLongTitle">Modificar Colaborador</h5>
+        <h5 class="modal-title" id="exampleModalLongTitle">Modificar Puesto</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -13,38 +13,21 @@
           <div class="form-group">
             <div class="form-row">
               <div class="form-group col-md-6">
-                <input type="number" class="form-control" id="e_id" name="e_id" style="display: none">
-                <label for="e_nombre">Nombre(s)</label>
-                <input type="text" class="form-control" id="e_nombre" name="e_nombre">
+              <input type="number" class="form-control" id="e_id" name="e_id" style="display: none">
+                <label for="e_nombrePuesto">Nombre Puesto</label>
+                <input type="text" class="form-control" id="e_nombrePuesto" name="e_nombrePuesto">
               </div>
               <div class="form-group col-md-6">
-                <label for="e_apellidoP">Apellido Paterno</label>
-                <input type="text" class="form-control" id="e_apellidoP" name="e_apellidoP">
+                <label for="e_entrada">Entrada</label>
+                <input type="time" class="form-control" id="e_entrada" name="e_entrada">
               </div>
             </div>
           </div>
           <div class="form-group">
             <div class="form-row">
               <div class="form-group col-md-6">
-                <label for="e_apellidoM">Apellido Materno</label>
-                <input type="text" class="form-control" id="e_apellidoM" name="e_apellidoM">
-              </div>
-              <div class="form-group col-md-6">
-                <label for="e_correo">Correo Electronico</label>
-                <input type="email" class="form-control" id="e_correo" name="e_correo">
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="form-row">
-              <div class="form-group col-md-4">
-                <label for="e_puesto">Puesto</label>
-                <select class="form-control" id="e_puesto" name="e_puesto">
-                  <option value="0">Seleccione un puesto</option>
-                  <?php foreach ($puestos as $puesto) {
-                    echo '<option value="'.$puesto->idPuestos.'">'.$puesto->nombrePuesto.'</option>';
-                  } ?>
-                </select>
+                <label for="e_salida">Salida</label>
+                <input type="time" class="form-control" id="e_salida" name="e_salida">
               </div>
             </div>
           </div>
