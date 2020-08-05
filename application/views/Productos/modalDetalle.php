@@ -33,7 +33,9 @@
                             <label for="d_proveedor">Proveedor</label>
                             <select class="form-control" id="d_proveedor" name="d_proveedor" disabled>
                                 <option selected value="0">Seleccione un proveedor</option>
-                                <option value="1">Xibusinness</option>
+                                <?php foreach ($proveedores as $proveedor) {
+                                    echo '<option value="'.$proveedor->idProveedores.'">'.$proveedor->razonSocial.'</option>';
+                                } ?>
                             </select>
                         </div>
                     </div>
@@ -61,6 +63,14 @@
                             <input type="text" class="form-control" id="d_tipo" name="d_tipo" disabled>
                         </div>
                     </div>  
+                </div>
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="d_sku">SKU</label>
+                            <input type="text" class="form-control" id="d_sku" name="d_sku">
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>

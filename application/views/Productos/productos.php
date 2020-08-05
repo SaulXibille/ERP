@@ -21,6 +21,7 @@
             <th scope="col">Marca</th>
             <th scope="col">Costo</th>
             <th scope="col">Precio al Público</th>
+            <th scope="col">SKU</th>
             <th scope="col">Estado</th>
             <th scope="col">Acción</th>
           </tr>
@@ -85,6 +86,7 @@
             {"data": "marca"},
             {"data": "costo"},
             {"data": "precioPublico"},
+            {"data": "sku"},
             {"data": "status"},
             {"render": function(data, type, row, meta) {
               var a = `<i class="fas fa-pencil-alt" value="${row.idProductos}" id="editar" title="Editar"></i> <i class="fas fa-trash-alt" value="${row.idProductos}" id="eliminar" title="Eliminar"></i> <i class="fas fa-info" value="${row.idProductos}" id="detalle" title="Detalles"></i>`;
@@ -107,9 +109,10 @@
     var marca = $("#marca").val();
     var modelo = $("#modelo").val();
     var tipo = $("#tipo").val();
+    var sku = $("#sku").val();
     var proveedor = $("#proveedor").val();
 
-    if(nombreProducto === "" || costo == 0 || precioPublico == 0 || numSerie === "" || marca === "" || modelo === "" || tipo === "" || proveedor == 0) {
+    if(nombreProducto === "" || costo == 0 || precioPublico == 0 || sku == 0 || numSerie === "" || marca === "" || modelo === "" || tipo === "" || proveedor == 0) {
       toastr["error"]("Completar todos los campos");
     } else {
       $.ajax({
@@ -124,6 +127,7 @@
           marca: marca,
           modelo: modelo,
           tipo: tipo,
+          sku: sku,
           idProveedores: proveedor
         },
         success: function(data) {
@@ -227,6 +231,7 @@
         $('#e_marca').val(data.post.marca);
         $('#e_modelo').val(data.post.modelo);
         $('#e_tipo').val(data.post.tipo);
+        $('#e_sku').val(data.post.sku);
         
       }
     });
@@ -245,8 +250,9 @@
     var marca = $('#e_marca').val();
     var modelo = $('#e_modelo').val();
     var tipo = $('#e_tipo').val();
-
-    if(nombreProducto === "" || costo == 0 || precioPublico == 0 || proveedor == 0 || numSerie === "" || marca === "" || modelo === "" || tipo === "") {
+    var sku = $('#e_sku').val();
+    console.log(sku);
+    if(nombreProducto === "" || costo == 0 || precioPublico == 0 || proveedor == 0 || sku == 0 || numSerie === "" || marca === "" || modelo === "" || tipo === "") {
       toastr["error"]("Completar todos los campos");
     } else {
       $.ajax({
@@ -262,6 +268,7 @@
           marca: marca,
           modelo: modelo,
           tipo: tipo,
+          sku: sku,
           idProveedores: proveedor
         },
         success: function(data) {
@@ -301,6 +308,7 @@
         $('#d_marca').val(data.post.marca);
         $('#d_modelo').val(data.post.modelo);
         $('#d_tipo').val(data.post.tipo);
+        $('#d_sku').val(data.post.sku);
         $(`#d_proveedor > option[value=${data.post.idProveedores}]`).attr("selected",true);
       }
     });
