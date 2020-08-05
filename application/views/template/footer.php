@@ -16,5 +16,7 @@
 <!-- SweetAlert  -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
+
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 </body>
 </html>

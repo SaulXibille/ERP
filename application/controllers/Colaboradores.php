@@ -34,6 +34,21 @@ class Colaboradores extends CI_Controller {
 		}
 	}
 
+	public function filtrarEmpleados() {
+		if($this->input->is_ajax_request()) {
+			$status = $this->input->post('status');
+
+			if($posts = $this->Colaboradores_modelo->filtrarEmpleados($status)){
+				$data = array('respuesta' => 'exito', 'posts' => $posts);
+			} else {
+				$data = array('respuesta' => 'error', 'mensaje' => 'No se encontro el registro');
+			}
+			echo json_encode($data);
+		} else {
+
+		}
+	}
+
 	public function agregar() {
 		if($this->input->is_ajax_request()) {
 			$this->form_validation->set_rules('nombres', 'Nombres', 'required');
@@ -59,11 +74,12 @@ class Colaboradores extends CI_Controller {
 		}
 	}
 
-	public function eliminar() {
+	public function cambiarStatus() {
 		if($this->input->is_ajax_request()) {
 			$idEmpleado = $this->input->post('idEmpleado');
+			$status = $this->input->post('status');
 
-			if($this->Colaboradores_modelo->eliminarEmpleado($idEmpleado)){
+			if($this->Colaboradores_modelo->cambiarStatus($idEmpleado, $status)){
 				$data = array('respuesta' => 'exito');
 			} else {
 				$data = array('respuesta' => 'error');
@@ -135,4 +151,5 @@ class Colaboradores extends CI_Controller {
 
 		}
 	}
+
 }

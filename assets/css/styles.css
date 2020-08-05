@@ -100,3 +100,22 @@ header p {
 	color: black;
 	background-color: rgba(51, 153, 204, 0.5);
 }
+
+#filtroo {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	/* border: 1px solid red; */
+	width: 250px;
+	margin-bottom: 5px;
+}
+#filtroo label {
+	display: block;
+	margin: 5px 5px 5px 0;
+}
+
+#filtroo select {
+	display: block;
+	width: 120px;
+	margin: 5px 5px 5px 0;
+}

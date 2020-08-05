@@ -89,7 +89,7 @@
             {"data": "sku"},
             {"data": "status"},
             {"render": function(data, type, row, meta) {
-              var a = `<i class="fas fa-pencil-alt" value="${row.idProductos}" id="editar" title="Editar"></i> <i class="fas fa-trash-alt" value="${row.idProductos}" id="eliminar" title="Eliminar"></i> <i class="fas fa-info" value="${row.idProductos}" id="detalle" title="Detalles"></i>`;
+              var a = `<i class="fas fa-pencil-alt" value="${row.idProductos}" id="editar" title="Editar"></i> <i class="fas fa-trash-alt" value="${row.idProductos}" id="eliminar" title="Eliminar"></i> <i class="fas fa-info" value="${row.idProductos}" id="detalle" title="Detalles"></i> <i class="fas fa-plus" value="${row.idProductos}" id="mas" title="Agregar a stock"></i>`;
               return a;
             }}
           ]

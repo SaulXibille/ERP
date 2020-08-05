@@ -17,6 +17,9 @@ $(document).ready(function () {
 			},
 			sProcessing: "Procesando...",
 		},
+		lengthMenu: [10, 20, 50, 100],
+		scrollY: 400,
+		scroller: true,
 		dom: "<'row' <'col-sm-12 col-md-4'l> <'col-sm-12 col-md-4 excel'B> <'col-sm-12 col-md-4'f> >" +
 				"<'row'<'col-sm-12'tr>>" +
 				"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
@@ -27,7 +30,7 @@ $(document).ready(function () {
 				titleAttr: 'Exportar a Excel',
 				className: 'btn btn-success'
 			},
-		],
+		]
 	});
 });
 

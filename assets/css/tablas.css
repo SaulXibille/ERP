@@ -19,7 +19,7 @@
 
 #tabla i {
 	margin-left: 5px;
-	font-size: 20px;
+	font-size: 25px;
 	cursor: pointer;
 }
 
@@ -27,12 +27,30 @@
 	color: blue;
 }
 
-#eliminar:hover {
+#desactivar {
+	color: blue;
+	font-size: 30px !important;
+}
+
+#desactivar:hover {
 	color: red;
+}
+
+#activar {
+	color: red;
+	font-size: 30px !important;
+}
+
+#activar:hover {
+	color:blue;
 }
 
 #detalle:hover {
 	color: yellow;
+}
+
+#mas:hover {
+	color: green;
 }
 
 .excel {
