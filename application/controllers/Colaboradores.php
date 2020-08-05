@@ -14,7 +14,7 @@ class Colaboradores extends CI_Controller {
 	public function index() {
 		if($this->session->userdata('is_logged')) {
 			$data['titulo'] = 'Colaboradores';
-			$data['puestos'] = $this->Puestos_modelo->obtenerPuestos();
+			$data['puestos'] = $this->Puestos_modelo->obtenerPuestosActivos();
 			$this->load->view('Colaboradores/colaboradores', $data);
 		} else {
 			$this->load->view('login');

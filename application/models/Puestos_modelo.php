@@ -11,6 +11,20 @@ class Puestos_modelo extends CI_Model {
 
     $this->db->select('*');
     $this->db->from('puestos');
+    $res = $this->db->get();
+
+    if($res->num_rows() > 0) {
+      $r = $res->row();
+      return $res->result();
+    }else {
+      return 0;
+    }
+  }
+
+  public function obtenerPuestosActivos(){
+
+    $this->db->select('*');
+    $this->db->from('puestos');
     $this->db->where('status', 1);
 
     $res = $this->db->get();

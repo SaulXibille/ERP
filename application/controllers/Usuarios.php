@@ -14,7 +14,7 @@ class Usuarios extends CI_Controller {
 	public function index() {
 		if($this->session->userdata('is_logged')) {
       $data['titulo'] = 'Usuarios';
-      $data['colaboradores'] = $this->Colaboradores_modelo->obtenerEmpleados();
+      $data['colaboradores'] = $this->Colaboradores_modelo->obtenerEmpleadosActivos();
 			$this->load->view('Usuarios/usuarios', $data);
 		} else {
 			$this->load->view('login');

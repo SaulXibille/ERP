@@ -24,6 +24,25 @@ class Colaboradores_modelo extends CI_Model {
     }
   }
 
+  public function obtenerEmpleadosActivos(){
+
+    $this->db->select('e.nombres, e.apellidoP, e.apellidoM, p.nombrePuesto, e.status, e.correo, e.idEmpleados');
+    $this->db->from('empleados e');
+    $this->db->join('puestos p', 'e.idPuestos = p.idPuestos');
+    $this->db->where('e.status', 1);
+
+    $res = $this->db->get();
+
+    if($res->num_rows() > 0) {
+      $r = $res->row();
+      return $res->result();
+    }else {
+      return 0;
+    }
+  }
+
+
+
   public function filtrarEmpleados($status) {
     $this->db->select('e.nombres, e.apellidoP, e.apellidoM, p.nombrePuesto, e.status, e.correo, e.idEmpleados');
     $this->db->from('empleados e');
