@@ -59,15 +59,19 @@
             status: valor
           },
           success: function(data) {
-            for (var i = 0; i < data.posts.length; i++) {
-              if (data.posts[i].status == 1) {
-                data.posts[i].status = "Activo";
-              } else {
-                data.posts[i].status = "Inactivo";
+            if(data.respuesta == 'error') {
+              toastr["error"]("No hay registros para mostrar");
+            } else {
+              for (var i = 0; i < data.posts.length; i++) {
+                if (data.posts[i].status == 1) {
+                  data.posts[i].status = "Activo";
+                } else {
+                  data.posts[i].status = "Inactivo";
+                }
               }
+              $('#tabla').DataTable().destroy();
+              inicializarTabla(data);
             }
-            $('#tabla').DataTable().destroy();
-            inicializarTabla(data);
           }
         });
       }
@@ -81,7 +85,6 @@
       type: "POST",
       dataType: "json",
       success: function(data) {
-        
         for (var i = 0; i < data.posts.length; i++) {
           if (data.posts[i].status == 1) {
             data.posts[i].status = "Activo";
@@ -89,10 +92,8 @@
             data.posts[i].status = "Inactivo";
           }
         }
-
         $('#tabla').DataTable().destroy();
         inicializarTabla(data);
-
       }
     });
   }
