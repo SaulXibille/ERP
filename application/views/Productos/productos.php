@@ -4,6 +4,7 @@
 <?php $this->load->view('Productos/modalAgregar'); ?>
 <?php $this->load->view('Productos/modalEditar'); ?>
 <?php $this->load->view('Productos/modalDetalle'); ?>
+<?php $this->load->view('Productos/modalStock'); ?>
 
 <div class="padre">
   <div class="hijo">
@@ -13,10 +14,21 @@
         Agregar
       </button>
     </div>
+
+    <div id="filtroo">
+      <label for="filtro">Mostrar:</label>
+      <select class="form-control" id="filtro">
+        <option value="">Todos</option>
+        <option value="1">Activos</option>
+        <option value="0">Inactivos</option>
+      </select>
+    </div>
+
     <div class="table-responsive">
       <table id="tabla" class="table table-striped table-bordered">
         <thead>
           <tr id="table-header">
+            <th scope="col">Existencia</th>
             <th scope="col">Nombre</th>
             <th scope="col">Marca</th>
             <th scope="col">Costo</th>
@@ -34,6 +46,40 @@
 <?php $this->load->view('template/footer'); ?>
 
 <script>
+  $(document).ready(function() {
+  obtenerProductos();
+  $("#filtro").on('change', function() {
+    var valor = $(this).val();
+    if(valor === "") {
+      obtenerProductos();
+    } else {
+      $.ajax({
+        url: "<?php echo base_url(); ?>Productos/filtrarProductos",
+        type: "POST",
+        dataType: "json",
+        data: {
+          status: valor
+        },
+        success: function(data) {
+            if(data.respuesta == 'error') {
+              toastr["error"]("No hay registros para mostrar");
+            } else {
+              for (var i = 0; i < data.posts.length; i++) {
+                if (data.posts[i].status == 1) {
+                  data.posts[i].status = "Activo";
+                } else {
+                  data.posts[i].status = "Inactivo";
+                }
+              }
+              $('#tabla').DataTable().destroy();
+              inicializarTabla(data);
+            }
+          }
+      });
+    }
+  });
+});
+
   // CONSULTA - MOSTRAR EN LA TABLA
   function obtenerProductos() {
     $.ajax({
@@ -49,8 +95,13 @@
             data.posts[i].status = "Inactivo";
           }
         }
-
         $('#tabla').DataTable().destroy();
+        inicializarTabla(data);
+      }
+    });
+  }
+
+  function inicializarTabla(data){
         $('#tabla').DataTable({
           // responsive: true,
           language: {
@@ -82,6 +133,7 @@
           ],
           "data" : data.posts,
           "columns": [
+            {"data": "existencia"},
             {"data": "nombreProducto"},
             {"data": "marca"},
             {"data": "costo"},
@@ -89,17 +141,20 @@
             {"data": "sku"},
             {"data": "status"},
             {"render": function(data, type, row, meta) {
-              var a = `<i class="fas fa-pencil-alt" value="${row.idProductos}" id="editar" title="Editar"></i> <i class="fas fa-trash-alt" value="${row.idProductos}" id="eliminar" title="Eliminar"></i> <i class="fas fa-info" value="${row.idProductos}" id="detalle" title="Detalles"></i> <i class="fas fa-plus" value="${row.idProductos}" id="mas" title="Agregar a stock"></i>`;
+              if(row.status == 'Inactivo') {
+                a = `<i class="fas fa-toggle-off" value="${row.idProductos}" id="activar" title="Activar"></i> <i class="fas fa-pencil-alt" value="${row.idProductos}" id="editar" title="Editar"></i> <i class="fas fa-info" value="${row.idProductos}" id="detalle" title="Detalles"></i> <i class="fas fa-plus" value="${row.idProductos}" id="stock" title="Stock"></i>`;
+              } else {
+                a = `<i class="fas fa-toggle-on" value="${row.idProductos}" id="desactivar" title="Desactivar"></i> <i class="fas fa-pencil-alt" value="${row.idProductos}" id="editar" title="Editar"></i> <i class="fas fa-info" value="${row.idProductos}" id="detalle" title="Detalles"></i> <i class="fas fa-plus" value="${row.idProductos}" id="stock" title="Stock"></i>`;
+              }
+              /* var a = `<i class="fas fa-pencil-alt" value="${row.idProductos}" id="editar" title="Editar"></i> <i class="fas fa-trash-alt" value="${row.sku}" id="eliminar" title="Eliminar"></i> <i class="fas fa-info" value="${row.idProductos}" id="detalle" title="Detalles"></i> <i class="fas fa-plus" value="${row.idProductos}" id="stock" title="Stock"></i>`; */
               return a;
             }}
           ]
         });
 
       }
-    });
-  }
 
-  // AGREGAR
+  // AGREGAR NUEVO
   $(document).on("click", "#agregar", function(e) {
     e.preventDefault();
     var nombreProducto = $("#nombreProducto").val();
@@ -146,11 +201,12 @@
     }
   });
 
-  // ELIMINAR
-  $(document).on("click", "#eliminar", function(e) {
+  // DESACTIVAR
+  $(document).on("click", "#desactivar", function(e) {
     e.preventDefault();
     var idProducto = $(this).attr("value");
-
+    var status = $(this).attr("id");
+    console.log(idProducto);
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: 'btn btn-success',
@@ -160,35 +216,36 @@
     })
 
     swalWithBootstrapButtons.fire({
-      title: '¿Seguro que quieres eliminarlo?',
+      title: '¿Seguro que quieres desactivarlo?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Si, eliminarlo!',
+      confirmButtonText: 'Si, desactivarlo!',
       cancelButtonText: 'No, cancelar!',
       reverseButtons: true
     }).then((result) => {
       if (result.value) {
 
         $.ajax({
-          url: "<?php echo base_url()?>Productos/eliminar",
+          url: "<?php echo base_url()?>Productos/cambiarStatus",
           type: "POST",
           dataType: "json",
           data: {
-            idProducto: idProducto
+            idProducto: idProducto,
+            status: status
           },
           success: function(data) {
             $('#tabla').DataTable().destroy();
             obtenerProductos();
             if(data.respuesta == "exito") {
               swalWithBootstrapButtons.fire(
-                'Eliminado!',
+                'Desactivado!',
                 'Registro eliminado correctamente!',
                 'success'
               )
             } else {
               swalWithBootstrapButtons.fire(
                 'Cancelado!',
-                'No se elimino el registro!',
+                'No se desactivo el registro!',
                 'error'
               )
             }
@@ -200,11 +257,133 @@
       ) {
         swalWithBootstrapButtons.fire(
           'Cancelado!',
-          'No se elimino el registro!',
+          'No se desactivo el registro!',
           'error'
         )
       }
     });
+  });
+
+  //ACTIVAR 
+  $(document).on("click", "#activar", function(e) {
+    e.preventDefault();
+    var idProducto = $(this).attr("value");
+    var status = $(this).attr("id");
+
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger mr-2'
+      },
+      buttonsStyling: false
+    })
+
+    swalWithBootstrapButtons.fire({
+      title: '¿Seguro que quieres activarlo?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si, activarlo!',
+      cancelButtonText: 'No, cancelar!',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.value) {
+
+        $.ajax({
+          url: "<?php echo base_url()?>Productos/cambiarStatus",
+          type: "POST",
+          dataType: "json",
+          data: {
+            idProducto: idProducto,
+            status: status
+          },
+          success: function(data) {
+            $('#tabla').DataTable().destroy();
+            obtenerProductos();
+            if(data.respuesta == "exito") {
+              swalWithBootstrapButtons.fire(
+                'Activado!',
+                'Registro activado correctamente!',
+                'success'
+              )
+            } else {
+              swalWithBootstrapButtons.fire(
+                'Cancelado!',
+                'No se activo el registro!',
+                'error'
+              )
+            }
+          }
+        });
+        
+      } else if (
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire(
+          'Cancelado!',
+          'No se activo el registro!',
+          'error'
+        )
+      }
+    });
+  });
+
+  // EDITAR STOCK
+  $(document).on("click", "#stock", function(e) {
+    e.preventDefault();
+    var idProducto = $(this).attr("value");
+    //console.log(`Id: ${idProducto}`);
+    $.ajax({
+      url: "<?php echo base_url()?>Productos/stock",
+      type: "POST",
+      dataType: "json",
+      data: {
+        idProducto: idProducto
+      },
+      success: function(data) {
+        
+        $('#modalStock').modal('show');
+        $('#s_id').val(data.post.idProductos);
+        $('#s_nombreProducto').val(data.post.nombreProducto);
+        $('#s_existencia').val(data.post.existencia);
+        
+      }
+    });
+  });
+
+  // EDITAR - ACTUALIZAR STOCK
+  $(document).on("click", "#actualizarStock", function(e) {
+    e.preventDefault();
+
+    var idProductos = $('#s_id').val();
+    var existencia = $('#s_existencia').val();
+    var existenciaNueva = $('#s_existenciaNueva').val();
+    var total = (parseInt(existencia) + parseInt(existenciaNueva));
+
+    console.log(total);
+
+    if(total == 0) {
+      toastr["error"]("Completar todos los campos");
+    } else {
+      $.ajax({
+        url: "<?php echo base_url()?>Productos/actualizarStock",
+        type: "POST",
+        dataType: "json",
+        data: {
+          idProductos: idProductos,
+          total: total
+        },
+        success: function(data) {
+          if(data.respuesta == 'exito') {
+            $('#tabla').DataTable().destroy();
+            obtenerProductos();
+            $("#modalStock").modal('hide');
+            toastr["success"](data.mensaje);
+          } else {
+            toastr["error"](data.mensaje);
+          }
+        }
+      }); 
+    }
   });
 
   // EDITAR

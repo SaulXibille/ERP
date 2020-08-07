@@ -31,6 +31,21 @@ class Proveedores extends CI_Controller {
 			
 		}
 	}
+
+	public function filtrarProveedores() {
+		if($this->input->is_ajax_request()) {
+			$status = $this->input->post('status');
+
+			if($posts = $this->Proveedores_modelo->filtrarProveedores($status)){
+				$data = array('respuesta' => 'exito', 'posts' => $posts);
+			} else {
+				$data = array('respuesta' => 'error', 'mensaje' => 'No se encontro el registro');
+			}
+			echo json_encode($data);
+		} else {
+
+		}
+	}
 	
 	public function agregar() {
 		if($this->input->is_ajax_request()) {
@@ -56,11 +71,12 @@ class Proveedores extends CI_Controller {
 		}
 	}
 	
-	public function eliminar() {
+	public function cambiarStatus() {
 		if($this->input->is_ajax_request()) {
 			$idProveedor = $this->input->post('idProveedor');
+			$status = $this->input->post('status');
 
-			if($this->Proveedores_modelo->eliminarProveedor($idProveedor)){
+			if($this->Proveedores_modelo->cambiarStatus($idProveedor, $status)){
 				$data = array('respuesta' => 'exito');
 			} else {
 				$data = array('respuesta' => 'error');
@@ -69,7 +85,7 @@ class Proveedores extends CI_Controller {
 		} else {
 
 		}
-	}
+    }
 	
 	public function modificar() {
 		if($this->input->is_ajax_request()) {

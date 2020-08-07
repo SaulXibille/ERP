@@ -10,7 +10,6 @@ class Proveedores_modelo extends CI_Model {
 
         $this->db->select('prov.razonSocial, prov.rfc, prov.giro, prov.idProveedores, prov.status');
         $this->db->from('proveedores prov');
-        $this->db->where('prov.status', 1);
 
         $res = $this->db->get();
 
@@ -22,10 +21,53 @@ class Proveedores_modelo extends CI_Model {
         }
     }
 
+    public function obtenerProveedoresActivos(){
+
+        $this->db->select('prov.razonSocial, prov.rfc, prov.giro, prov.idProveedores, prov.status');
+        $this->db->from('proveedores prov');
+        $this->db->where('prov.status', 1);
+    
+        $res = $this->db->get();
+    
+        if($res->num_rows() > 0) {
+          $r = $res->row();
+          return $res->result();
+        }else {
+          return 0;
+        }
+      }
+
+      public function filtrarProveedores($status) {
+        $this->db->select('prov.razonSocial, prov.rfc, prov.giro, prov.idProveedores, prov.status');
+        $this->db->from('proveedores prov');
+        $this->db->where('prov.status', $status);
+    
+        $res = $this->db->get();
+    
+        if($res->num_rows() > 0) {
+          $r = $res->row();
+          return $res->result();
+        }else {
+          return 0;
+        }
+      }
+
     public function agregarProveedor($data) {
         return $this->db->insert('proveedores', $data);
       }
-    
+
+      public function cambiarStatus($idProveedor,$status) {
+        if($status == "desactivar") {
+          $status = 0;
+        } else {
+          $status = 1;
+        }
+        $this->db->where('idProveedores', $idProveedor);
+        $this->db->set('status', $status);
+        $this->db->update('proveedores');
+        return ($this->db->affected_rows() > 0);
+      }
+
       public function eliminarProveedor($idProveedor) {
         $this->db->where('idProveedores', $idProveedor);
             $this->db->set('status', 0);

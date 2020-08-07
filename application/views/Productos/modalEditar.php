@@ -70,6 +70,10 @@
                             <label for="e_sku">SKU</label>
                             <input type="text" class="form-control" id="e_sku" name="e_sku">
                         </div>
+                        <div class="form-group col-md-6">
+                            <label for="e_existencia">Existencia</label>
+                            <input type="text" class="form-control" id="e_existencia" name="e_existencia">
+                        </div>
                     </div>
                 </div>
             </form>
