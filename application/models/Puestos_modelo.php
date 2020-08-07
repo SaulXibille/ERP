@@ -21,6 +21,21 @@ class Puestos_modelo extends CI_Model {
     }
   }
 
+  public function filtrarPuestos($status) {
+    $this->db->select('*');
+    $this->db->from('puestos');
+    $this->db->where('status', $status);
+
+    $res = $this->db->get();
+
+    if($res->num_rows() > 0) {
+      $r = $res->row();
+      return $res->result();
+    }else {
+      return 0;
+    }
+  }
+
   public function obtenerPuestosActivos(){
 
     $this->db->select('*');
@@ -41,9 +56,21 @@ class Puestos_modelo extends CI_Model {
     return $this->db->insert('puestos', $data);
   }
 
-  public function eliminarPuesto($idPuesto) {
+  // public function eliminarPuesto($idPuesto) {
+  //   $this->db->where('idPuestos', $idPuesto);
+	// 	$this->db->set('status', 0);
+	// 	$this->db->update('puestos');
+	// 	return ($this->db->affected_rows() > 0);
+  // }
+
+  public function cambiarStatus($idPuesto, $status) {
+    if($status == "desactivar") {
+      $status = 0;
+    } else {
+      $status = 1;
+    }
     $this->db->where('idPuestos', $idPuesto);
-		$this->db->set('status', 0);
+		$this->db->set('status', $status);
 		$this->db->update('puestos');
 		return ($this->db->affected_rows() > 0);
   }

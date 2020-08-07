@@ -23,11 +23,11 @@
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="e_contra">Contraseña</label>
-                <input type="password" class="form-control" id="e_contra" name="e_contra">
+                <input type="password" class="form-control" id="e_contra" name="e_contra" data-info="">
               </div>
               <div class="form-group col-md-6">
                 <label for="e_conf_contra">Confirmar Contraseña</label>
-                <input type="password" class="form-control" id="e_conf_contra" name="e_conf_contra">
+                <input type="password" class="form-control" id="e_conf_contra" name="e_conf_contra" data-info="">
               </div>
               <div class="form-group col-md-4">
                 <label for="e_colaborador">Colaborador</label>

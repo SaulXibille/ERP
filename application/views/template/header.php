@@ -10,9 +10,12 @@
 
   
 <!-- BOOTSTRAP -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-  <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+  <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet"> -->
   <!-- ESTILOS PERSONALIZADOS -->
+  <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.min.css'); ?>">
+  <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap-grid.min.css'); ?>">
+  <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap-reboot.min.css'); ?>">
   <link rel="stylesheet" href="<?php echo base_url('assets/css/menu.css'); ?>">
   <link rel="stylesheet" href="<?php echo base_url('assets/css/styles.css'); ?>">
   <link rel="stylesheet" href="<?php echo base_url('assets/css/tablas.css'); ?>">

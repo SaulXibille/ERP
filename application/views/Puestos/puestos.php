@@ -13,6 +13,16 @@
         Agregar
       </button>
     </div>
+
+    <div id="filtroo">
+      <label for="filtro">Mostrar:</label>
+      <select class="form-control" id="filtro">
+        <option value="">Todos</option>
+        <option value="1">Activos</option>
+        <option value="0">Inactivos</option>
+      </select>
+    </div>
+
     <div class="table-responsive">
       <table id="tabla" class="table table-striped table-bordered">
         <thead>
@@ -33,6 +43,41 @@
 
 <script>
 
+// FILTRAR
+$(document).ready(function() {
+    obtenerPuestos();
+    $("#filtro").on('change', function() {
+      var valor = $(this).val();
+      if(valor === "") {
+        obtenerPuestos();
+      } else {
+        $.ajax({
+          url: "<?php echo base_url(); ?>Puestos/filtrarPuestos",
+          type: "POST",
+          dataType: "json",
+          data: {
+            status: valor
+          },
+          success: function(data) {
+            if(data.respuesta == 'error') {
+              toastr["error"]("No hay registros para mostrar");
+            } else {
+              for (var i = 0; i < data.posts.length; i++) {
+                if (data.posts[i].status == 1) {
+                  data.posts[i].status = "Activo";
+                } else {
+                  data.posts[i].status = "Inactivo";
+                }
+              }
+              $('#tabla').DataTable().destroy();
+              inicializarTabla(data);
+            }
+          }
+        });
+      }
+    });
+  });
+
   // CONSULTA - MOSTRAR EN LA TABLA
   function obtenerPuestos() {
     $.ajax({
@@ -50,49 +95,61 @@
         }
 
         $('#tabla').DataTable().destroy();
-        $('#tabla').DataTable({
-          // responsive: true,
-          language: {
-            lengthMenu: "Mostrar _MENU_ registros",
-            zeroRecords: "No se encontraron resultados",
-            info:
-              "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-            infoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
-            infoFiltered: "(filtrado de un total de _MAX_ registros)",
-            sSearch: "Buscar:",
-            oPaginate: {
-              sFirst: "Primero",
-              sLast: "Último",
-              sNext: "Siguiente",
-              sPrevious: "Anterior",
-            },
-            sProcessing: "Procesando...",
-          },
-          dom: "<'row' <'col-sm-12 col-md-4'l> <'col-sm-12 col-md-4 excel'B> <'col-sm-12 col-md-4'f> >" +
-              "<'row'<'col-sm-12'tr>>" +
-              "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-          buttons: [
-            {
-              extend: 'excelHtml5',
-              text: '<i class="fas fa-file-excel"></i>',
-              titleAttr: 'Exportar a Excel',
-              className: 'btn btn-success'
-            },
-          ],
-          "data" : data.posts,
-          "columns": [
-            {"data": "nombrePuesto"},
-            {"data": "entrada"},
-            {"data": "salida"},
-            {"data": "status"},
-            {"render": function(data, type, row, meta) {
-              var a = `<i class="fas fa-pencil-alt" value="${row.idPuestos}" id="editar" title="Editar"></i> <i class="fas fa-trash-alt" value="${row.idPuestos}" id="eliminar" title="Eliminar"></i> <i class="fas fa-info" value="${row.idPuestos}" id="detalle" title="Detalles"></i>`;
-              return a;
-            }}
-          ]
-        });
+        inicializarTabla(data);
 
       }
+    });
+  }
+
+  function inicializarTabla(data) {
+    $('#tabla').DataTable({
+      // responsive: true,
+      language: {
+        lengthMenu: "Mostrar _MENU_ registros",
+        zeroRecords: "No se encontraron resultados",
+        info:
+          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        infoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+        infoFiltered: "(filtrado de un total de _MAX_ registros)",
+        sSearch: "Buscar:",
+        oPaginate: {
+          sFirst: "Primero",
+          sLast: "Último",
+          sNext: "Siguiente",
+          sPrevious: "Anterior",
+        },
+        sProcessing: "Procesando...",
+      },
+      lengthMenu: [10, 20, 50, 100],
+      scrollY: 400,
+      scroller: true,
+      dom: "<'row' <'col-sm-12 col-md-4'l> <'col-sm-12 col-md-4 excel'B> <'col-sm-12 col-md-4'f> >" +
+          "<'row'<'col-sm-12'tr>>" +
+          "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+      buttons: [
+        {
+          extend: 'excelHtml5',
+          text: '<i class="fas fa-file-excel"></i>',
+          titleAttr: 'Exportar a Excel',
+          className: 'btn btn-success'
+        },
+      ],
+      "data" : data.posts,
+      "columns": [
+        {"data": "nombrePuesto"},
+        {"data": "entrada"},
+        {"data": "salida"},
+        {"data": "status"},
+        {"render": function(data, type, row, meta) {
+          var a = '';
+          if(row.status == 'Inactivo') {
+            a = `<i class="fas fa-toggle-off" value="${row.idPuestos}" id="activar" title="Activar"></i> <i class="fas fa-pencil-alt" value="${row.idPuestos}" id="editar" title="Editar"></i> <i class="fas fa-info" value="${row.idPuestos}" id="detalle" title="Detalles"></i>`;
+          } else {
+            a = `<i class="fas fa-toggle-on" value="${row.idPuestos}" id="desactivar" title="Desactivar"></i> <i class="fas fa-pencil-alt" value="${row.idPuestos}" id="editar" title="Editar"></i> <i class="fas fa-info" value="${row.idPuestos}" id="detalle" title="Detalles"></i>`;
+          }
+          return a;
+        }}
+      ]
     });
   }
 
@@ -130,10 +187,11 @@
     }
   });
 
-  // ELIMINAR
-  $(document).on("click", "#eliminar", function(e) {
+  // DESACTIVAR
+  $(document).on("click", "#desactivar", function(e) {
     e.preventDefault();
     var idPuesto = $(this).attr("value");
+    var status = $(this).attr("id");
 
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
@@ -144,35 +202,36 @@
     })
 
     swalWithBootstrapButtons.fire({
-      title: '¿Seguro que quieres eliminarlo?',
+      title: '¿Seguro que quieres desactivarlo?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Si, eliminarlo!',
+      confirmButtonText: 'Si, desactivarlo!',
       cancelButtonText: 'No, cancelar!',
       reverseButtons: true
     }).then((result) => {
       if (result.value) {
 
         $.ajax({
-          url: "<?php echo base_url()?>Puestos/eliminar",
+          url: "<?php echo base_url()?>Puestos/cambiarStatus",
           type: "POST",
           dataType: "json",
           data: {
-            idPuesto: idPuesto
+            idPuesto: idPuesto,
+            status: status
           },
           success: function(data) {
             $('#tabla').DataTable().destroy();
             obtenerPuestos();
             if(data.respuesta == "exito") {
               swalWithBootstrapButtons.fire(
-                'Eliminado!',
-                'Registro eliminado correctamente!',
+                'Desactivado!',
+                'Registro desactivado correctamente!',
                 'success'
               )
             } else {
               swalWithBootstrapButtons.fire(
                 'Cancelado!',
-                'No se elimino el registro!',
+                'No se desactivo el registro!',
                 'error'
               )
             }
@@ -184,7 +243,70 @@
       ) {
         swalWithBootstrapButtons.fire(
           'Cancelado!',
-          'No se elimino el registro!',
+          'No se desactivo el registro!',
+          'error'
+        )
+      }
+    });
+  });
+
+  //ACTIVAR 
+  $(document).on("click", "#activar", function(e) {
+    e.preventDefault();
+    var idPuesto = $(this).attr("value");
+    var status = $(this).attr("id");
+
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger mr-2'
+      },
+      buttonsStyling: false
+    })
+
+    swalWithBootstrapButtons.fire({
+      title: '¿Seguro que quieres activarlo?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si, activarlo!',
+      cancelButtonText: 'No, cancelar!',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.value) {
+
+        $.ajax({
+          url: "<?php echo base_url()?>Puestos/cambiarStatus",
+          type: "POST",
+          dataType: "json",
+          data: {
+            idPuesto: idPuesto,
+            status: status
+          },
+          success: function(data) {
+            $('#tabla').DataTable().destroy();
+            obtenerPuestos();
+            if(data.respuesta == "exito") {
+              swalWithBootstrapButtons.fire(
+                'Activado!',
+                'Registro activado correctamente!',
+                'success'
+              )
+            } else {
+              swalWithBootstrapButtons.fire(
+                'Cancelado!',
+                'No se activo el registro!',
+                'error'
+              )
+            }
+          }
+        });
+        
+      } else if (
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire(
+          'Cancelado!',
+          'No se activo el registro!',
           'error'
         )
       }
@@ -272,6 +394,4 @@
       }
     });
   });
-
-  obtenerPuestos();
 </script>

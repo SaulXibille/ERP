@@ -23,6 +23,7 @@ class Productos_modelo extends CI_Model {
         }
     }
 
+
     public function agregarProducto($data) {
         return $this->db->insert('productos', $data);
       }

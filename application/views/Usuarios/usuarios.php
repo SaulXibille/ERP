@@ -44,6 +44,7 @@
 
 <script>
 
+  // FILTRAR
   $(document).ready(function() {
     obtenerUsuarios();
     $("#filtro").on('change', function() {
@@ -328,15 +329,14 @@
         idUsuario: idUsuario
       },
       success: function(data) {
-        // $('#tabla').DataTable().destroy();
-        // obtenerEmpleados();
-        console.log(data);
         $('#modalEditar').modal('show');
         $('#e_id').val(data.post.idUsuarios);
         $('#e_correo').val(data.post.correo);
         $('#e_contra').val(data.post.contraseña);
         $('#e_conf_contra').val(data.post.contraseña);
         $(`#e_colaborador > option[value=${data.post.idEmpleados}]`).attr("selected",true);
+        $('#e_contra').data( "info", data.post.contraseña);
+        $('#e_conf_contra').data( "info", data.post.contraseña);
       }
     });
   });
@@ -350,10 +350,35 @@
     var colaborador = $("#e_colaborador").val();
     var contraseña = $("#e_contra").val();
     var conf_contraseña = $("#e_conf_contra").val();
+    var data_contraseña = $("#e_contra").data("info");
+    var data_conf_contraseña = $("#e_conf_contra").data("info");
 
     if(correo === "" || colaborador == 0 || contraseña === "" || conf_contraseña === "") {
       toastr["error"]("Completar todos los campos");
-    } else {
+    } else if(contraseña != conf_contraseña) {
+      toastr["error"]("La contraseña no coinciden");
+    } else if(contraseña === data_contraseña && conf_contraseña === data_conf_contraseña) {
+      $.ajax({
+        url: "<?php echo base_url()?>Usuarios/actualizar2",
+        type: "POST",
+        dataType: "json",
+        data: {
+          correo: correo,
+          idEmpleados: colaborador,
+          idUsuarios: idUsuario
+        },
+        success: function(data) {
+          if(data.respuesta == 'exito') {
+            $('#tabla').DataTable().destroy();
+            obtenerUsuarios();
+            $("#modalEditar").modal('hide');
+            toastr["success"](data.mensaje);
+          } else {
+            toastr["error"](data.mensaje);
+          }
+        }
+      }); 
+    }else {
       $.ajax({
         url: "<?php echo base_url()?>Usuarios/actualizar",
         type: "POST",

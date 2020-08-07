@@ -32,6 +32,21 @@ class Puestos extends CI_Controller {
 		}
 	}
 
+	public function filtrarPuestos() {
+		if($this->input->is_ajax_request()) {
+			$status = $this->input->post('status');
+
+			if($posts = $this->Puestos_modelo->filtrarPuestos($status)){
+				$data = array('respuesta' => 'exito', 'posts' => $posts);
+			} else {
+				$data = array('respuesta' => 'error', 'mensaje' => 'No se encontro el registro');
+			}
+			echo json_encode($data);
+		} else {
+
+		}
+	}
+
 	public function agregar() {
 		if($this->input->is_ajax_request()) {
       $this->form_validation->set_rules('nombrePuesto', 'Nombre Puesto', 'required');
@@ -57,11 +72,27 @@ class Puestos extends CI_Controller {
 		}
 	}
 
-	public function eliminar() {
+	// public function eliminar() {
+	// 	if($this->input->is_ajax_request()) {
+	// 		$idPuesto = $this->input->post('idPuesto');
+
+	// 		if($this->Puestos_modelo->eliminarPuesto($idPuesto)){
+	// 			$data = array('respuesta' => 'exito');
+	// 		} else {
+	// 			$data = array('respuesta' => 'error');
+	// 		}
+	// 		echo json_encode($data);
+	// 	} else {
+
+	// 	}
+	// }
+
+	public function cambiarStatus() {
 		if($this->input->is_ajax_request()) {
 			$idPuesto = $this->input->post('idPuesto');
+			$status = $this->input->post('status');
 
-			if($this->Puestos_modelo->eliminarPuesto($idPuesto)){
+			if($this->Puestos_modelo->cambiarStatus($idPuesto, $status)){
 				$data = array('respuesta' => 'exito');
 			} else {
 				$data = array('respuesta' => 'error');

@@ -4,8 +4,13 @@
 	/* width: 100% !im por; */
 }
 
+#tabla-productos, #tabla-lista {
+	width: 100% !important;
+	/* border: 1px solid red; */
+}
+
 #table-header {
-	background-color: rgba(51, 153, 204, 0.5);
+	background-color: rgba(51, 153, 204, 0.5) !important;
 }
 
 #table-header th {

@@ -14,7 +14,7 @@ class Login extends CI_Controller {
 
 	public function ingresar() {
 		$correo = $this->input->post('correo');
-		$contraseña = $this->input->post('contraseña');
+		$contraseña = md5($this->input->post('contraseña'));
 		
 		$res = $this->Login_modelo->ingresar($correo, $contraseña);
 
@@ -22,7 +22,7 @@ class Login extends CI_Controller {
 			$s_data = array(
 				's_idUsuario' => $res->idUsuarios,
 				's_idEmpleado' => $res->idEmpleados,
-				's_nombreUsuario' => $res->nombres,
+				's_nombreUsuario' => $res->nombres.' '.$res->apellidoP.' '.$res->apellidoM,
 				's_puesto' => $res->nombrePuesto,
 				's_status' => $res->status,
 				'is_logged' => TRUE,

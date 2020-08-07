@@ -58,7 +58,13 @@ class Usuarios extends CI_Controller {
 			if($this->form_validation->run() == FALSE) {
 				$data = array('respuesta' => 'error', 'mensaje' => validation_errors());
 			} else {
-        $ajax_data = $this->input->post(array('contraseña', 'correo', 'idEmpleados'));
+				// $contraseña = md5($this->input->post('contraseña'));
+				// $this->input->post(array($contraseña, 'correo', 'idEmpleados'));
+				$ajax_data = array(
+					'contraseña' => md5($this->input->post("contraseña")),
+					'correo'=> $this->input->post("correo"),
+					'idEmpleados'=> $this->input->post("idEmpleados"), 
+				);
         // print_r($ajax_data);
 				if($this->Usuarios_modelo->agregarUsuario($ajax_data)){
 					$data = array('respuesta' => 'exito', 'mensaje' => 'Añadido con exito');
@@ -93,7 +99,6 @@ class Usuarios extends CI_Controller {
 	public function modificar() {
 		if($this->input->is_ajax_request()) {
 			$idUsuario = $this->input->post('idUsuario');
-
 			if($post = $this->Usuarios_modelo->modificarUsuario($idUsuario)){
 				$data = array('respuesta' => 'exito', 'post' => $post);
 			} else {
@@ -115,7 +120,35 @@ class Usuarios extends CI_Controller {
 				$data = array('respuesta' => 'error', 'mensaje' => validation_errors());
 			} else {
         $data['idEmpleados'] = $this->input->post('idEmpleados');
-        $data['contraseña'] = $this->input->post('contraseña');
+        $data['contraseña'] = md5($this->input->post('contraseña'));
+				$data['correo'] = $this->input->post('correo');
+				$data['idUsuarios'] = $this->input->post('idUsuarios');
+
+				if($this->Usuarios_modelo->actualizarUsuario($data)){
+					$data = array('respuesta' => 'exito', 'mensaje' => 'Actualizado con exito');
+				} else {
+					$data = array('respuesta' => 'error', 'mensaje' => 'Error al actualizar');
+				}
+			}
+
+			echo json_encode($data);
+			// echo "ajax request";
+		} else {
+
+		}
+	}
+
+	public function actualizar2() {
+		if($this->input->is_ajax_request()) {
+			$this->form_validation->set_rules('correo', 'Correo', 'required|valid_email');
+      // $this->form_validation->set_rules('contraseña', 'Contraseña', 'required');
+			$this->form_validation->set_rules('idEmpleados', 'Colaborador', 'required');
+
+			if($this->form_validation->run() == FALSE) {
+				$data = array('respuesta' => 'error', 'mensaje' => validation_errors());
+			} else {
+        $data['idEmpleados'] = $this->input->post('idEmpleados');
+        // $data['contraseña'] = md5($this->input->post('contraseña'));
 				$data['correo'] = $this->input->post('correo');
 				$data['idUsuarios'] = $this->input->post('idUsuarios');
 
