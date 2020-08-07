@@ -3,7 +3,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header" style="background-color: #91c9e8">
-            <h5 class="modal-title" id="exampleModalLongTitle">Modificar Producto</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle">Detalle Producto</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -68,7 +68,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="d_sku">SKU</label>
-                            <input type="text" class="form-control" id="d_sku" name="d_sku">
+                            <input type="text" class="form-control" id="d_sku" name="d_sku" disabled>
                         </div>
                     </div>
                 </div>

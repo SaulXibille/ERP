@@ -32,7 +32,22 @@ class Productos extends CI_Controller{
 			
 		}
     }
-    
+	
+	public function filtrarProductos() {
+		if($this->input->is_ajax_request()) {
+			$status = $this->input->post('status');
+
+			if($posts = $this->Productos_modelo->filtrarProductos($status)){
+				$data = array('respuesta' => 'exito', 'posts' => $posts);
+			} else {
+				$data = array('respuesta' => 'error', 'mensaje' => 'No se encontro el registro');
+			}
+			echo json_encode($data);
+		} else {
+
+		}
+	}
+
     public function agregar() {
 		if($this->input->is_ajax_request()) {
 			$this->form_validation->set_rules('nombreProducto', 'Nombre', 'required');
@@ -61,12 +76,13 @@ class Productos extends CI_Controller{
 			
 		}
     }
-    
-    public function eliminar() {
+	
+    public function cambiarStatus() {
 		if($this->input->is_ajax_request()) {
 			$idProducto = $this->input->post('idProducto');
+			$status = $this->input->post('status');
 
-			if($this->Productos_modelo->eliminarProducto($idProducto)){
+			if($this->Productos_modelo->cambiarStatus($idProducto, $status)){
 				$data = array('respuesta' => 'exito');
 			} else {
 				$data = array('respuesta' => 'error');
@@ -76,7 +92,46 @@ class Productos extends CI_Controller{
 
 		}
     }
+	
+	public function stock() {
+		if($this->input->is_ajax_request()) {
+			$idProducto = $this->input->post('idProducto');
+
+			if($post = $this->Productos_modelo->modificarStock($idProducto)){
+				$data = array('respuesta' => 'exito', 'post' => $post);
+			} else {
+				$data = array('respuesta' => 'error', 'mensaje' => 'No se encontro el registro');
+			}
+			echo json_encode($data);
+		} else {
+
+		}
+    }
     
+    public function actualizarStock() {
+		if($this->input->is_ajax_request()) {
+			$this->form_validation->set_rules('total', 'total', 'required');
+			
+			if($this->form_validation->run() == FALSE) {
+				$data = array('respuesta' => 'error', 'mensaje' => validation_errors());
+			} else {
+				$data['idProductos'] = $this->input->post('idProductos');
+				$data['existencia'] = $this->input->post('total');
+
+				if($this->Productos_modelo->actualizarStock($data)){
+					$data = array('respuesta' => 'exito', 'mensaje' => 'Actualizado con exito');
+				} else {
+					$data = array('respuesta' => 'error', 'mensaje' => 'Error al actualizar');
+				}
+			}
+
+			echo json_encode($data);
+			// echo "ajax request";
+		} else {
+
+		}
+    }
+
     public function modificar() {
 		if($this->input->is_ajax_request()) {
 			$idProducto = $this->input->post('idProducto');

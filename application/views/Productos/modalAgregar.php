@@ -18,7 +18,7 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label for="costo">Costo</label>
-                            <input type="text" class="form-control" id="costo" name="costo">
+                            <input type="number" class="form-control" id="costo" name="costo">
                         </div>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="precioPublico">Precio al Público</label>
-                            <input type="text" class="form-control" id="precioPublico" name="precioPublico">
+                            <input type="number" class="form-control" id="precioPublico" name="precioPublico">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="proveedor">Proveedor</label>

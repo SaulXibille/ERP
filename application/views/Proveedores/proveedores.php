@@ -13,6 +13,16 @@
         Agregar
       </button>
     </div>
+
+    <div id="filtroo">
+      <label for="filtro">Mostrar:</label>
+      <select class="form-control" id="filtro">
+        <option value="">Todos</option>
+        <option value="1">Activos</option>
+        <option value="0">Inactivos</option>
+      </select>
+    </div>
+
     <div class="table-responsive">
       <table id="tabla" class="table table-striped table-bordered">
         <thead>
@@ -32,6 +42,40 @@
 <?php $this->load->view('template/footer'); ?>
 
 <script>
+  $(document).ready(function() {
+  obtenerProveedores();
+  $("#filtro").on('change', function() {
+    var valor = $(this).val();
+    if(valor === "") {
+      obtenerProveedores();
+    } else {
+      $.ajax({
+        url: "<?php echo base_url(); ?>Proveedores/filtrarProveedores",
+        type: "POST",
+        dataType: "json",
+        data: {
+          status: valor
+        },
+        success: function(data) {
+            if(data.respuesta == 'error') {
+              toastr["error"]("No hay registros para mostrar");
+            } else {
+              for (var i = 0; i < data.posts.length; i++) {
+                if (data.posts[i].status == 1) {
+                  data.posts[i].status = "Activo";
+                } else {
+                  data.posts[i].status = "Inactivo";
+                }
+              }
+              $('#tabla').DataTable().destroy();
+              inicializarTabla(data);
+            }
+          }
+      });
+    }
+  });
+});
+
   // CONSULTA - MOSTRAR EN LA TABLA
   function obtenerProveedores() {
     $.ajax({
@@ -49,6 +93,12 @@
         }
 
         $('#tabla').DataTable().destroy();
+        inicializarTabla(data);
+      }
+    });
+  }
+
+  function inicializarTabla(data){
         $('#tabla').DataTable({
           // responsive: true,
           language: {
@@ -85,15 +135,17 @@
             {"data": "giro"},
             {"data": "status"},
             {"render": function(data, type, row, meta) {
-              var a = `<i class="fas fa-pencil-alt" value="${row.idProveedores}" id="editar" title="Editar"></i> <i class="fas fa-trash-alt" value="${row.idProveedores}" id="eliminar" title="Eliminar"></i> <i class="fas fa-info" value="${row.idProveedores}" id="detalle" title="Detalles"></i>`;
+              if(row.status == 'Inactivo') {
+                a = `<i class="fas fa-toggle-off" value="${row.idProveedores}" id="activar" title="Activar"></i> <i class="fas fa-pencil-alt" value="${row.idProveedores}" id="editar" title="Editar"></i> <i class="fas fa-info" value="${row.idProveedores}" id="detalle" title="Detalles"></i>`;
+              } else {
+                a = `<i class="fas fa-toggle-on" value="${row.idProveedores}" id="desactivar" title="Desactivar"></i> <i class="fas fa-pencil-alt" value="${row.idProveedores}" id="editar" title="Editar"></i> <i class="fas fa-info" value="${row.idProveedores}" id="detalle" title="Detalles"></i>`;
+              }
               return a;
             }}
           ]
         });
 
       }
-    });
-  }
 
   // AGREGAR
   $(document).on("click", "#agregar", function(e) {
@@ -130,11 +182,12 @@
     }
   });
 
-  // ELIMINAR
-  $(document).on("click", "#eliminar", function(e) {
+  // DESACTIVAR
+  $(document).on("click", "#desactivar", function(e) {
     e.preventDefault();
     var idProveedor = $(this).attr("value");
-
+    var status = $(this).attr("id");
+    console.log(idProveedor);
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: 'btn btn-success',
@@ -144,35 +197,36 @@
     })
 
     swalWithBootstrapButtons.fire({
-      title: '¿Seguro que quieres eliminarlo?',
+      title: '¿Seguro que quieres desactivarlo?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Si, eliminarlo!',
+      confirmButtonText: 'Si, desactivarlo!',
       cancelButtonText: 'No, cancelar!',
       reverseButtons: true
     }).then((result) => {
       if (result.value) {
 
         $.ajax({
-          url: "<?php echo base_url()?>Proveedores/eliminar",
+          url: "<?php echo base_url()?>Proveedores/cambiarStatus",
           type: "POST",
           dataType: "json",
           data: {
-            idProveedor: idProveedor
+            idProveedor: idProveedor,
+            status: status
           },
           success: function(data) {
             $('#tabla').DataTable().destroy();
             obtenerProveedores();
             if(data.respuesta == "exito") {
               swalWithBootstrapButtons.fire(
-                'Eliminado!',
+                'Desactivado!',
                 'Registro eliminado correctamente!',
                 'success'
               )
             } else {
               swalWithBootstrapButtons.fire(
                 'Cancelado!',
-                'No se elimino el registro!',
+                'No se desactivo el registro!',
                 'error'
               )
             }
@@ -184,7 +238,70 @@
       ) {
         swalWithBootstrapButtons.fire(
           'Cancelado!',
-          'No se elimino el registro!',
+          'No se desactivo el registro!',
+          'error'
+        )
+      }
+    });
+  });
+
+  //ACTIVAR 
+  $(document).on("click", "#activar", function(e) {
+    e.preventDefault();
+    var idProveedor = $(this).attr("value");
+    var status = $(this).attr("id");
+
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger mr-2'
+      },
+      buttonsStyling: false
+    })
+
+    swalWithBootstrapButtons.fire({
+      title: '¿Seguro que quieres activarlo?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si, activarlo!',
+      cancelButtonText: 'No, cancelar!',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.value) {
+
+        $.ajax({
+          url: "<?php echo base_url()?>Proveedores/cambiarStatus",
+          type: "POST",
+          dataType: "json",
+          data: {
+            idProveedor: idProveedor,
+            status: status
+          },
+          success: function(data) {
+            $('#tabla').DataTable().destroy();
+            obtenerProveedores();
+            if(data.respuesta == "exito") {
+              swalWithBootstrapButtons.fire(
+                'Activado!',
+                'Registro activado correctamente!',
+                'success'
+              )
+            } else {
+              swalWithBootstrapButtons.fire(
+                'Cancelado!',
+                'No se activo el registro!',
+                'error'
+              )
+            }
+          }
+        });
+        
+      } else if (
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire(
+          'Cancelado!',
+          'No se activo el registro!',
           'error'
         )
       }
