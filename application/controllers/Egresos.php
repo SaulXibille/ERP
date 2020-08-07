@@ -105,5 +105,36 @@ class Egresos extends CI_Controller {
 
 		}
 	}
+
+	public function filtrarEgresos() {
+		if($this->input->is_ajax_request()) {
+			$status = $this->input->post('status');
+
+			if($posts = $this->Egresos_modelo->filtrarEgresos($status)){
+				$data = array('respuesta' => 'exito', 'posts' => $posts);
+			} else {
+				$data = array('respuesta' => 'error', 'mensaje' => 'No se encontro el registro');
+			}
+			echo json_encode($data);
+		} else {
+
+		}
+	}
+
+	public function cambiarStatus() {
+		if($this->input->is_ajax_request()) {
+			$id_Egresos = $this->input->post('id_Egresos');
+			$status = $this->input->post('status');
+
+			if($this->Egresos_modelo->cambiarStatus($id_Egresos, $status)){
+				$data = array('respuesta' => 'exito');
+			} else {
+				$data = array('respuesta' => 'error');
+			}
+			echo json_encode($data);
+		} else {
+
+		}
+	}
 	
 }

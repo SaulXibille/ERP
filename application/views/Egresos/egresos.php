@@ -13,6 +13,16 @@
         Agregar
       </button>
     </div>
+
+    <div id="filtroo">
+      <label for="filtro">Mostrar:</label>
+      <select class="form-control" id="filtro">
+        <option value="">Todos</option>
+        <option value="1">Activos</option>
+        <option value="0">Inactivos</option>
+      </select>
+    </div>
+
     <div class="table-responsive">
       <table id="tabla" class="table table-striped table-bordered">
         <thead>
@@ -22,6 +32,7 @@
             <th scope="col">Subtotal</th>
             <th scope="col">Fecha</th>
             <th scope="col">Proveedor</th>
+            <th scope="col">Estado</th>
             <th scope="col">Acción</th>
           </tr>
         </thead>
@@ -33,58 +44,114 @@
 <?php $this->load->view('template/footer'); ?>
 
 <script>
-     // CONSULTA - MOSTRAR EN LA TABLA
-  function obtenerEgresos() {
+
+$(document).ready(function() {
+  obtenerEgresos();
+  $("#filtro").on('change', function() {
+    var valor = $(this).val();
+    if(valor === "") {
+      obtenerEgresos();
+    } else {
+      $.ajax({
+        url: "<?php echo base_url(); ?>Egresos/filtrarEgresos",
+        type: "POST",
+        dataType: "json",
+        data: {
+          status: valor
+        },
+        success: function(data) {
+            if(data.respuesta == 'error') {
+              toastr["error"]("No hay registros para mostrar");
+            } else {
+              for (var i = 0; i < data.posts.length; i++) {
+                if (data.posts[i].status == 1) {
+                  data.posts[i].status = "Activo";
+                } else {
+                  data.posts[i].status = "Inactivo";
+                }
+              }
+              $('#tabla').DataTable().destroy();
+              inicializarTabla(data);
+            }
+          }
+      });
+    }
+  });
+});
+
+   // CONSULTA - MOSTRAR EN LA TABLA
+   function obtenerEgresos() {
     $.ajax({
       url: "<?php echo base_url(); ?>Egresos/obtenerEgresos",
       type: "POST",
       dataType: "json",
       success: function(data) {
+        
+        for (var i = 0; i < data.posts.length; i++) {
+          if (data.posts[i].status == 1) {
+            data.posts[i].status = "Activo";
+          } else {
+            data.posts[i].status = "Inactivo";
+          }
+        }
         $('#tabla').DataTable().destroy();
-        $('#tabla').DataTable({
-          // responsive: true,
-          language: {
-            lengthMenu: "Mostrar _MENU_ registros",
-            zeroRecords: "No se encontraron resultados",
-            info:
-              "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-            infoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
-            infoFiltered: "(filtrado de un total de _MAX_ registros)",
-            sSearch: "Buscar:",
-            oPaginate: {
-              sFirst: "Primero",
-              sLast: "Último",
-              sNext: "Siguiente",
-              sPrevious: "Anterior",
-            },
-            sProcessing: "Procesando...",
-          },
-          dom: "<'row' <'col-sm-12 col-md-4'l> <'col-sm-12 col-md-4 excel'B> <'col-sm-12 col-md-4'f> >" +
-              "<'row'<'col-sm-12'tr>>" +
-              "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-          buttons: [
-            {
-              extend: 'excelHtml5',
-              text: '<i class="fas fa-file-excel"></i>',
-              titleAttr: 'Exportar a Excel',
-              className: 'btn btn-success'
-            },
-          ],
-          "data" : data.posts,
-          "columns": [
-            {"data": "serie"},
-            {"data": "folio"},
-            {"data": "subtotal"},
-            {"data": "fecha"},
-            {"data": "razonSocial"},
-            {"render": function(data, type, row, meta) {
-              var a = `<i class="fas fa-pencil-alt" value="${row.id_Egresos}" id="editar" title="Editar"></i> <i class="fas fa-info" value="${row.id_Egresos}" id="detalle" title="Detalles"></i>`;
-              return a;
-            }}
-          ]
-        });
-
+        inicializarTabla(data);
       }
+    });
+  }
+
+  function inicializarTabla(data) {
+    $('#tabla').DataTable({
+      // responsive: true,
+      language: {
+        lengthMenu: "Mostrar _MENU_ registros",
+        zeroRecords: "No se encontraron resultados",
+        info:
+          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        infoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+        infoFiltered: "(filtrado de un total de _MAX_ registros)",
+        sSearch: "Buscar:",
+        oPaginate: {
+          sFirst: "Primero",
+          sLast: "Último",
+          sNext: "Siguiente",
+          sPrevious: "Anterior",
+        },
+        sProcessing: "Procesando...",
+      },
+      lengthMenu: [10, 20, 50, 100],
+      scrollY: 400,
+      scroller: true,
+      dom: "<'row' <'col-sm-12 col-md-4'l> <'col-sm-12 col-md-4 excel'B> <'col-sm-12 col-md-4'f> >" +
+          "<'row'<'col-sm-12'tr>>" +
+          "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+      buttons: [
+        {
+          extend: 'excelHtml5',
+          text: '<i class="fas fa-file-excel"></i>',
+          titleAttr: 'Exportar a Excel',
+          className: 'btn btn-success'
+        },
+      ],
+      "data" : data.posts,
+      "columns": [
+        {"data": "serie"},
+        {"data": "folio"},
+        {"data": "subtotal"},
+        {"data": "fecha"},
+        {"data": "razonSocial"},
+        {"data": "status"},
+        {"render": function(data, type, row, meta) {
+          var a = '';
+          if(row.status == 'Inactivo') {
+            a = `<i class="fas fa-toggle-off" value="${row.id_Egresos}" id="activar" title="Activar"></i> <i class="fas fa-pencil-alt" value="${row.id_Egresos}" id="editar" title="Editar"></i> <i class="fas fa-info" value="${row.id_Egresos}" id="detalle" title="Detalles"></i>`;
+          } else {
+            a = `<i class="fas fa-toggle-on" value="${row.id_Egresos}" id="desactivar" title="Desactivar"></i> <i class="fas fa-pencil-alt" value="${row.id_Egresos}" id="editar" title="Editar"></i> <i class="fas fa-info" value="${row.id_Egresos}" id="detalle" title="Detalles"></i>`;
+          }
+          
+          return a;
+        }}
+      ]
     });
   }
 
@@ -224,5 +291,129 @@
   });
 
 
-  obtenerEgresos();
+  // DESACTIVAR
+  $(document).on("click", "#desactivar", function(e) {
+    e.preventDefault();
+    var idEgreso = $(this).attr("value");
+    var status = $(this).attr("id");
+
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger mr-2'
+      },
+      buttonsStyling: false
+    })
+
+    swalWithBootstrapButtons.fire({
+      title: '¿Seguro que quieres desactivarlo?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si, desactivarlo!',
+      cancelButtonText: 'No, cancelar!',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.value) {
+
+        $.ajax({
+          url: "<?php echo base_url()?>Egresos/cambiarStatus",
+          type: "POST",
+          dataType: "json",
+          data: {
+            id_Egresos: idEgreso,
+            status: status
+          },
+          success: function(data) {
+            $('#tabla').DataTable().destroy();
+            obtenerEgresos();
+            if(data.respuesta == "exito") {
+              swalWithBootstrapButtons.fire(
+                'Desactivado!',
+                'Registro desactivado correctamente!',
+                'success'
+              )
+            } else {
+              swalWithBootstrapButtons.fire(
+                'Cancelado!',
+                'No se desactivo el registro!',
+                'error'
+              )
+            }
+          }
+        });
+        
+      } else if (
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire(
+          'Cancelado!',
+          'No se desactivo el registro!',
+          'error'
+        )
+      }
+    });
+  });
+
+  //ACTIVAR 
+  $(document).on("click", "#activar", function(e) {
+    e.preventDefault();
+    var idEgreso = $(this).attr("value");
+    var status = $(this).attr("id");
+
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger mr-2'
+      },
+      buttonsStyling: false
+    })
+
+    swalWithBootstrapButtons.fire({
+      title: '¿Seguro que quieres activarlo?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si, activarlo!',
+      cancelButtonText: 'No, cancelar!',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.value) {
+
+        $.ajax({
+          url: "<?php echo base_url()?>Egresos/cambiarStatus",
+          type: "POST",
+          dataType: "json",
+          data: {
+            id_Egresos: idEgreso,
+            status: status
+          },
+          success: function(data) {
+            $('#tabla').DataTable().destroy();
+            obtenerEgresos();
+            if(data.respuesta == "exito") {
+              swalWithBootstrapButtons.fire(
+                'Activado!',
+                'Registro activado correctamente!',
+                'success'
+              )
+            } else {
+              swalWithBootstrapButtons.fire(
+                'Cancelado!',
+                'No se activo el registro!',
+                'error'
+              )
+            }
+          }
+        });
+        
+      } else if (
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire(
+          'Cancelado!',
+          'No se activo el registro!',
+          'error'
+        )
+      }
+    });
+  });
 </script>
