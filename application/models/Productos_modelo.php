@@ -8,7 +8,7 @@ class Productos_modelo extends CI_Model {
 
     public function obtenerProductos(){
 
-        $this->db->select('produc.nombreProducto, produc.marca, produc.costo, produc.precioPublico, produc.sku, produc.status, produc.numSerie, produc.modelo, produc.tipo, prov.razonSocial, produc.idProductos, produc.existencia');
+        $this->db->select('produc.nombreProducto, produc.marca, produc.costo, produc.precioPublico, produc.status, produc.numSerie, produc.modelo, produc.tipo, prov.razonSocial, produc.idProductos, produc.existencia');
         $this->db->from('productos produc');
         $this->db->join('proveedores prov', 'produc.idProveedores = prov.idProveedores');
         
@@ -25,7 +25,7 @@ class Productos_modelo extends CI_Model {
 
     public function obtenerProductosActivos(){
 
-      $this->db->select('produc.nombreProducto, produc.marca, produc.costo, produc.precioPublico, produc.sku, produc.status, produc.numSerie, produc.modelo, produc.tipo, prov.razonSocial, produc.idProductos, produc.existencia');
+      $this->db->select('produc.nombreProducto, produc.marca, produc.costo, produc.precioPublico, produc.status, produc.numSerie, produc.modelo, produc.tipo, prov.razonSocial, produc.idProductos, produc.existencia');
       $this->db->from('productos produc');
       $this->db->join('proveedores prov', 'produc.idProveedores = prov.idProveedores');
       $this->db->where('produc.status', 1);
@@ -41,7 +41,7 @@ class Productos_modelo extends CI_Model {
     }
 
     public function obtenerProductoId($idProducto){
-      $this->db->select('produc.nombreProducto, produc.marca, produc.costo, produc.precioPublico, produc.sku, produc.status, produc.numSerie, produc.modelo, produc.tipo, prov.razonSocial, produc.idProductos');
+      $this->db->select('produc.nombreProducto, produc.marca, produc.costo, produc.precioPublico, produc.status, produc.numSerie, produc.modelo, produc.tipo, prov.razonSocial, produc.idProductos');
       $this->db->from('productos produc');
       $this->db->join('proveedores prov', 'produc.idProveedores = prov.idProveedores');
       $this->db->where('produc.idProductos', $idProducto);
@@ -56,7 +56,7 @@ class Productos_modelo extends CI_Model {
     }
 
     public function filtrarProductos($status) {
-      $this->db->select('produc.nombreProducto, produc.marca, produc.costo, produc.precioPublico, produc.sku, produc.status, produc.numSerie, produc.modelo, produc.tipo, prov.razonSocial, produc.idProductos, produc.existencia');
+      $this->db->select('produc.nombreProducto, produc.marca, produc.costo, produc.precioPublico, produc.status, produc.numSerie, produc.modelo, produc.tipo, prov.razonSocial, produc.idProductos, produc.existencia');
       $this->db->from('productos produc');
       $this->db->join('proveedores prov', 'produc.idProveedores = prov.idProveedores');
       $this->db->where('produc.status', $status);

@@ -58,7 +58,6 @@ class Productos extends CI_Controller{
             $this->form_validation->set_rules('marca', 'Marca', 'required');
             $this->form_validation->set_rules('modelo', 'Modelo', 'required');
 			$this->form_validation->set_rules('tipo', 'Tipo', 'required');
-			$this->form_validation->set_rules('sku', 'sku', 'required');
 			if($this->form_validation->run() == FALSE) {
 				$data = array('respuesta' => 'error', 'mensaje' => validation_errors());
 			} else {
@@ -157,7 +156,6 @@ class Productos extends CI_Controller{
             $this->form_validation->set_rules('marca', 'Marca', 'required');
             $this->form_validation->set_rules('modelo', 'Modelo', 'required');
             $this->form_validation->set_rules('tipo', 'Tipo', 'required');
-			$this->form_validation->set_rules('sku', 'SKU', 'required');
 			if($this->form_validation->run() == FALSE) {
 				$data = array('respuesta' => 'error', 'mensaje' => validation_errors());
 			} else {
@@ -169,7 +167,6 @@ class Productos extends CI_Controller{
                 $data['marca'] = $this->input->post('marca');
                 $data['modelo'] = $this->input->post('modelo');
 				$data['tipo'] = $this->input->post('tipo');
-				$data['sku'] = $this->input->post('sku');
                 $data['idProveedores'] = $this->input->post('idProveedores');
 
 				if($this->Productos_modelo->actualizarProducto($data)){

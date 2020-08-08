@@ -63,14 +63,6 @@
                         </div>
                     </div>  
                 </div>
-                <div class="form-group">
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="sku">SKU</label>
-                            <input type="text" class="form-control" id="sku" name="sku">
-                        </div>
-                    </div>
-                </div>
             </form>
         </div>
     <div class="modal-footer">
