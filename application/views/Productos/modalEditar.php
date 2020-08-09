@@ -68,7 +68,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="e_existencia">Existencia</label>
-                            <input type="text" class="form-control" id="e_existencia" name="e_existencia">
+                            <input type="text" class="form-control" id="e_existencia" name="e_existencia" disabled>
                         </div>
                     </div>
                 </div>

@@ -9,7 +9,7 @@
             </button>
         </div>
         <div class="modal-body">
-            <form action="" method="POST" id="FormAgregar">
+            <form action="" method="POST" id="FormStock">
                 <div class="form-group">
                     <div class="form-row">
                         <div class="form-group col-md-6">
@@ -18,7 +18,7 @@
                             <input type="text" class="form-control" id="s_nombreProducto" name="s_nombreProducto" disabled>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="s_existencia">existencia</label>
+                            <label for="s_existencia">Existencia actual</label>
                             <input type="number" class="form-control" id="s_existencia" name="s_existencia" disabled>
                         </div>
                     </div>

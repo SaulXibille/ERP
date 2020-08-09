@@ -163,8 +163,9 @@
     var modelo = $("#modelo").val();
     var tipo = $("#tipo").val();
     var proveedor = $("#proveedor").val();
+    var existencia = $("#existencia").val();
 
-    if(nombreProducto === "" || costo == 0 || precioPublico == 0 || numSerie === "" || marca === "" || modelo === "" || tipo === "" || proveedor == 0) {
+    if(nombreProducto === "" || costo == 0 || precioPublico == 0 || numSerie === "" || marca === "" || modelo === "" || tipo === "" || proveedor == 0 || existencia == 0) {
       toastr["error"]("Completar todos los campos");
     } else {
       $.ajax({
@@ -179,7 +180,8 @@
           marca: marca,
           modelo: modelo,
           tipo: tipo,
-          idProveedores: proveedor
+          idProveedores: proveedor,
+          existencia: existencia
         },
         success: function(data) {
           if(data.respuesta == 'exito') {
@@ -379,6 +381,7 @@
           }
         }
       }); 
+      document.getElementById("FormStock").reset();
     }
   });
 
@@ -406,6 +409,7 @@
         $('#e_marca').val(data.post.marca);
         $('#e_modelo').val(data.post.modelo);
         $('#e_tipo').val(data.post.tipo);
+        $('#e_existencia').val(data.post.existencia);
         
       }
     });
@@ -480,6 +484,7 @@
         $('#d_modelo').val(data.post.modelo);
         $('#d_tipo').val(data.post.tipo);
         $(`#d_proveedor > option[value=${data.post.idProveedores}]`).attr("selected",true);
+        $('#d_existencia').val(data.post.existencia);
       }
     });
   });

@@ -64,6 +64,14 @@
                         </div>
                     </div>  
                 </div>
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="d_existencia">Existencia</label>
+                            <input type="text" class="form-control" id="d_existencia" name="d_existencia">
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
     <div class="modal-footer">
