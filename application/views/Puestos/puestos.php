@@ -44,38 +44,38 @@
 <script>
 
 // FILTRAR
-$(document).ready(function() {
-    obtenerPuestos();
-    $("#filtro").on('change', function() {
-      var valor = $(this).val();
-      if(valor === "") {
-        obtenerPuestos();
-      } else {
-        $.ajax({
-          url: "<?php echo base_url(); ?>Puestos/filtrarPuestos",
-          type: "POST",
-          dataType: "json",
-          data: {
-            status: valor
-          },
-          success: function(data) {
-            if(data.respuesta == 'error') {
-              toastr["error"]("No hay registros para mostrar");
-            } else {
-              for (var i = 0; i < data.posts.length; i++) {
-                if (data.posts[i].status == 1) {
-                  data.posts[i].status = "Activo";
-                } else {
-                  data.posts[i].status = "Inactivo";
+  $(document).ready(function() {
+      obtenerPuestos();
+      $("#filtro").on('change', function() {
+        var valor = $(this).val();
+        if(valor === "") {
+          obtenerPuestos();
+        } else {
+          $.ajax({
+            url: "<?php echo base_url(); ?>Puestos/filtrarPuestos",
+            type: "POST",
+            dataType: "json",
+            data: {
+              status: valor
+            },
+            success: function(data) {
+              if(data.respuesta == 'error') {
+                toastr["error"]("No hay registros para mostrar");
+              } else {
+                for (var i = 0; i < data.posts.length; i++) {
+                  if (data.posts[i].status == 1) {
+                    data.posts[i].status = "Activo";
+                  } else {
+                    data.posts[i].status = "Inactivo";
+                  }
                 }
+                $('#tabla').DataTable().destroy();
+                inicializarTabla(data);
               }
-              $('#tabla').DataTable().destroy();
-              inicializarTabla(data);
             }
-          }
-        });
-      }
-    });
+          });
+        }
+      });
   });
 
   // CONSULTA - MOSTRAR EN LA TABLA

@@ -79,17 +79,13 @@ class Ventas extends CI_Controller {
 
 	public function agregar() {
 		if($this->input->is_ajax_request()) {
-			$this->form_validation->set_rules('nombres', 'Nombres', 'required');
-			$this->form_validation->set_rules('apellidoP', 'Apellido Paterno', 'required');
-			$this->form_validation->set_rules('apellidoM', 'Apellido Materno', 'required');
-			$this->form_validation->set_rules('idPuestos', 'Puesto', 'required');
-			$this->form_validation->set_rules('correo', 'Correo', 'required|valid_email');
+			$this->form_validation->set_rules('subtotal', 'Subtotal', 'required');
 			if($this->form_validation->run() == FALSE) {
 				$data = array('respuesta' => 'error', 'mensaje' => validation_errors());
 			} else {
 				$ajax_data = $this->input->post();
-				if($this->Colaboradores_modelo->agregarEmpleado($ajax_data)){
-					$data = array('respuesta' => 'exito', 'mensaje' => 'Añadido con exito');
+				if($post = $this->Ventas_modelo->agregarVenta($ajax_data)){
+					$data = array('respuesta' => 'exito', 'mensaje' => 'Añadido con exito', 'post' => $post);
 				} else {
 					$data = array('respuesta' => 'error', 'mensaje' => 'Error al agregar');
 				}
@@ -97,6 +93,38 @@ class Ventas extends CI_Controller {
 
 			echo json_encode($data);
 			// echo "ajax request";
+		} else {
+			
+		}
+	}
+
+	public function agregarDetalleVentas() {
+		if($this->input->is_ajax_request()) {
+			$this->form_validation->set_rules('idVenta', 'Subtotal', 'required');
+			if($this->form_validation->run() == FALSE) {
+				$data = array('respuesta' => 'error', 'mensaje' => validation_errors());
+			} else {
+				$idVenta1 = $this->input->post(array('idVenta'));
+				$lista = $this->input->post(array('lista'));
+
+				$idVenta = $idVenta1['idVenta'];
+
+				$datos = $lista['lista'];
+				$total = count($datos);
+
+				for ($i = 0; $i < $total; ++$i){
+					$idProducto = $datos[$i]['idProducto'];
+					$cantidad = $datos[$i]['cantidad'];
+					$data['idVentas'] = $idVenta;
+					$data['idProductos'] = $idProducto;
+					$data['cantidad'] = $cantidad;
+					$post = $this->Ventas_modelo->agregarDetalleVentas($data);
+					$this->Productos_modelo->restarStock($cantidad, $idProducto);
+				}
+
+				$data2 = array('respuesta' => 'exito', 'mensaje' => 'Añadido con exito', 'post' => $post);
+				echo json_encode($data2);
+			}
 		} else {
 			
 		}
@@ -167,9 +195,9 @@ class Ventas extends CI_Controller {
 
 	public function detalle() {
 		if($this->input->is_ajax_request()) {
-			$idEmpleado = $this->input->post('idEmpleado');
+			$idVenta = $this->input->post('idVenta');
 
-			if($post = $this->Colaboradores_modelo->detalleEmpleado($idEmpleado)){
+			if($post = $this->Ventas_modelo->detalleVenta($idVenta)){
 				$data = array('respuesta' => 'exito', 'post' => $post);
 			} else {
 				$data = array('respuesta' => 'error', 'mensaje' => 'No se encontro el registro');

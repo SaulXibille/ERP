@@ -1,12 +1,5 @@
 .table {
 	text-align: center;
-	/* border: 1px solid green; */
-	/* width: 100% !im por; */
-}
-
-#tabla-productos, #tabla-lista {
-	width: 100% !important;
-	/* border: 1px solid red; */
 }
 
 #table-header {

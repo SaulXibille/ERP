@@ -29,9 +29,8 @@
         <thead>
           <tr id="table-header">
             <th scope="col">Vendedor</th>
-            <th scope="col">Costo</th>
-            <th scope="col">Precio Publico</th>
-            <th scope="col">Cantidad</th>
+            <th scope="col">Subtotal</th>
+            <th scope="col">Fecha - Hora</th>
             <th scope="col">Estado</th>
             <th scope="col">Acción</th>
           </tr>
@@ -45,8 +44,9 @@
 
 <script>
   var listaProductos = [];
+  var fecha = fechaActual();
+
   $(document).ready(function() {
-    var fecha = fechaActual();
     $("#fecha").val(fecha);
     obtenerVentas();
     $("#filtro").on('change', function() {
@@ -104,6 +104,7 @@
 
   //INICIALIZA LA TABLA DE VENTAS
   function inicializarTabla(data) {
+    // console.log(data);
     $('#tabla').DataTable({
       language: {
         lengthMenu: "Mostrar _MENU_ registros",
@@ -140,9 +141,10 @@
         {"render": function(data, type, row, meta) {
           return `${row.nombres} ${row.apellidoP} ${row.apellidoM}`;
         }},
-        {"data": "costo"},
-        {"data": "precioPublico"},
-        {"data": "cantidad"},
+        {"render": function(data, type, row, meta) {
+          return `$${row.subtotal}`;
+        }},
+        {"data": "fecha"},
         {"data": "status"},
         {"render": function(data, type, row, meta) {
           var a = '';
@@ -183,20 +185,23 @@
         {"data": "nombreProducto"},
         {"data": "tipo"},
         {"data": "marca"},
-        {"data": "costo"},
         {"render": function(data, type, row, meta) {
-          return `<i class="fas fa-plus" value="${row.idProductos}" id="producto" title="Agregar" style="color: green;"></i>`;
+          return `$${row.costo}`;
+        }},
+        {"data": "existencia"},
+        {"render": function(data, type, row, meta) {
+          return `<i class="fas fa-plus" value="${row.idProductos}" id="producto" title="Agregar" style="color: green; cursor: pointer;"></i>`;
         }}
       ]
     });
   }
 
-    // INICIALIZA LA TABLA DE LISTA
+  // INICIALIZA LA TABLA DE LISTA
   function inicializarTablaLista(data) {
     $('#tabla-lista').DataTable({
       language: {
         lengthMenu: "Mostrar _MENU_ registros",
-        zeroRecords: "No se encontraron resultados",
+        zeroRecords: "No hay productos en la lista",
         info:
           "",
         infoEmpty: "",
@@ -216,11 +221,15 @@
       "data" : data,
       "columns": [
         {"data": "nombre"},
-        {"data": "precio"},
-        {"data": "cantidad"},
-        {"data": "total"},
         {"render": function(data, type, row, meta) {
-          return `<i class="fas fa-plus" value="${row.idProductos}" id="producto" title="Agregar" style="color: green;"></i>`;
+          return `$${row.precio}`;
+        }},
+        {"data": "cantidad"},
+        {"render": function(data, type, row, meta) {
+          return `$${row.total}`;
+        }},
+        {"render": function(data, type, row, meta) {
+          return `<i class="fas fa-trash-alt" value="${row.idProducto}" id="pEliminar" title="Eliminar" style="color: red; cursor: pointer;"></i>`;
         }}
       ]
     });
@@ -229,13 +238,13 @@
   // DETECTA CUANDO SE CIERRA UN MODAL
   $("#modalProductos").on('hidden.bs.modal', function () {
     $('#tabla-productos').DataTable().destroy();
+    $('#exampleModalCenter').show();
   });
 
   // TOMA DATOS DE LOS PRODUCTOS
   $(document).on("click", "#producto", function(e) {
     e.preventDefault();
     var idProducto = $(this).attr("value");
-
     $.ajax({
       url: "<?php echo base_url()?>Ventas/obtenerProductoId",
       type: "POST",
@@ -244,20 +253,30 @@
         idProducto: idProducto
       },
       success: function(data) {
-        console.log(data.post);
+        // console.log(data.post);
         var precioPublico = parseInt(data.post.precioPublico);
         $("#modalProductos").modal('hide');
         $("#precioPublico").val(precioPublico);
         $('#costo').val(data.post.costo);
         $('#nombreProducto').val(data.post.nombreProducto);
+        $('#idProducto').val(data.post.idProductos);
+        $('#existencia').val(data.post.existencia);
         $('#cantidad').val("");
         $('#total').val("");
+        $('#exampleModalCenter').show();
       }
     });
   });  
 
   $("#cantidad").keyup(function(){
     var cantidad = $("#cantidad").val();
+    var precioPublico = $("#precioPublico").val();
+    var total = precioPublico * cantidad;
+    $("#total").val(total);
+  });
+  
+  $("#cantidad").change(function(){
+		var cantidad = $("#cantidad").val();
     var precioPublico = $("#precioPublico").val();
     var total = precioPublico * cantidad;
     $("#total").val(total);
@@ -272,6 +291,7 @@
         success: function(data) {
           if(data.respuesta == 'exito') {
             $('#modalProductos').modal('show');
+            $('#exampleModalCenter').hide();
             inicializarTablaProductos(data);
           } else {
             toastr["error"](data.mensaje);
@@ -280,14 +300,12 @@
       });
   });
 
-  $(document).on("click", "#btnAgregar", function(e) {
-    $('#tabla-lista').DataTable().destroy();
-    inicializarTablaLista(listaProductos);
-  });
-
-  //AGREGAR A VENTA
+  //AGREGAR A LISTA DE VENTA
   $(document).on("click", "#pAgregar", function(e) {
-    if($("#cantidad").val() === "") {
+    e.preventDefault();
+    if($("#cantidad").val() > $("#existencia").val()) {
+      toastr["error"]("No hay suficiente en existencia!");
+    } else if($("#cantidad").val() === "") {
       toastr["error"]("Ingrese una cantidad!");
     }else {
       var datos = {
@@ -295,48 +313,102 @@
         precio: $("#precioPublico").val(),
         cantidad: $("#cantidad").val(),
         total: $("#total").val(),
+        idProducto: $("#idProducto").val(),
       }
+      var existencia = $("#existencia").val();
+      var cantidad = $("#cantidad").val();
+      existencia -= cantidad;
+      $("#existencia").val(existencia);
       listaProductos.push(datos);
-      $('#tabla-lista').DataTable().clear().rows.add(listaProductos).draw();
-      // inicializarTablaLista(listaProductos);
+      $('#tabla-lista').DataTable().destroy();
+      inicializarTablaLista(listaProductos);
     }
+  });
+
+  //ELIMINAR PRODUCTO DE LA LISTA
+  $(document).on("click", "#pEliminar", function(e) {
+    var idProducto = $(this).attr("value");
+      
+    for (var i = 0; i < listaProductos.length; i++){
+      if (listaProductos[i].idProducto === idProducto) {
+          listaProductos.splice(i,1);
+      }
+    }
+    $('#tabla-lista').DataTable().clear().rows.add(listaProductos).draw();
+  });
+
+  $(document).on("click", "#btnAgregar", function(e) {
+    $('#tabla-lista').DataTable().destroy();
+    inicializarTablaLista(listaProductos);
   });
 
   // AGREGAR
   $(document).on("click", "#agregar", function(e) {
     e.preventDefault();
-    var nombres = $("#nombre").val();
-    var apellidoP = $("#apellidoP").val();
-    var apellidoM = $("#apellidoM").val();
-    var correo = $("#correo").val();
-    var puesto = $("#puesto").val();
-
-    if(nombres === "" || apellidoP === "" || apellidoM === "" || correo === "" || puesto == 0) {
+    var nombreProducto = $("#nombreProducto").val();
+    var idEmpleado = <?php echo $this->session->userdata('s_idEmpleado');?>;
+    var precioPublico = $("#precioPublico").val();
+    var costo = $("#costo").val();
+    var cantidad = $("#cantidad").val();
+    var total = $("#total").val();
+    var clienteNombre = $("#clienteNombre").val();
+    var clienteApellidoP = $("#clienteApellidoP").val();
+    var clienteApellidoM = $("#clienteApellidoM").val();
+    var clienteContacto = $("#clienteContacto").val();
+    
+    if(listaProductos.length === 0) {
+      toastr["error"]("No hay productos registrados!");
+    } else if(clienteNombre === "" || clienteApellidoP === "" || clienteApellidoM === "" || clienteContacto === "") {
       toastr["error"]("Completar todos los campos");
     } else {
+      var subtotal = 0;
+      for (var i = 0; i < listaProductos.length; i++){
+        subtotal += parseInt(listaProductos[i].total);
+      }
       $.ajax({
         url: "<?php echo base_url(); ?>Ventas/agregar",
         type: "POST",
         dataType: "json",
         data: {
-          nombres: nombres,
-          apellidoP: apellidoP,
-          apellidoM: apellidoM,
-          correo: correo,
-          idPuestos: puesto
+          subtotal: subtotal,
+          idEmpleados: idEmpleado,
+          clienteNombre: clienteNombre,
+          clienteApellidoP: clienteApellidoP,
+          clienteApellidoM: clienteApellidoM,
+          clienteContacto: clienteContacto
         },
         success: function(data) {
           if(data.respuesta == 'exito') {
-            $('#tabla').DataTable().destroy();
-            obtenerEmpleados();
-            $("#exampleModalCenter").modal('hide');
             toastr["success"](data.mensaje);
+            var idVenta = data.post.idVenta;
+            var lista = listaProductos;
+            $.ajax({
+              url: "<?php echo base_url(); ?>Ventas/agregarDetalleVentas",
+              type: "POST",
+              dataType: "json",
+              data: {
+                idVenta: idVenta,
+                lista: lista,
+              },
+              success: function(data) {
+                console.log('DESPUES DE AGREGAR');
+                console.log(listaProductos);
+                listaProductos = [];
+                console.log(listaProductos);
+              }
+            });
+            $('#tabla').DataTable().destroy();
+            // $('#tabla-lista').DataTable().destroy();
+            obtenerVentas();
+            $("#exampleModalCenter").modal('hide');
+            document.getElementById("FormAgregar").reset();
+            $("#fecha").val(fecha);
+
           } else {
             toastr["error"](data.mensaje);
           }
         }
       });
-      document.getElementById("FormAgregar").reset();
     }
   });
 
@@ -470,8 +542,6 @@
   $(document).on("click", "#editar", function(e) {
     e.preventDefault();
     var idEmpleado = $(this).attr("value");
-    // console.log(`Id: ${idEmpleado}`);
-
     $.ajax({
       url: "<?php echo base_url()?>Colaboradores/modificar",
       type: "POST",
@@ -537,27 +607,38 @@
   // CONSULTAR - DETALLE
   $(document).on("click", "#detalle", function(e) {
     e.preventDefault();
-    var idEmpleado = $(this).attr("value");
+    var idVenta = $(this).attr("value");
     // console.log(`Id: ${idEmpleado}`);
 
     $.ajax({
-      url: "<?php echo base_url()?>Colaboradores/detalle",
+      url: "<?php echo base_url()?>Ventas/detalle",
       type: "POST",
       dataType: "json",
       data: {
-        idEmpleado: idEmpleado
+        idVenta: idVenta
       },
       success: function(data) {
-        // $('#tabla').DataTable().destroy();
-        // obtenerEmpleados();
-        console.log(data);
+        $('#d_comprador').html(`<b>Comprador:</b> ${data.post[0].clienteNombre} ${data.post[0].clienteApellidoP} ${data.post[0].clienteApellidoM}`);
+        $('#d_contacto').html(`<b>Contacto:</b> ${data.post[0].clienteContacto}`);
+        $('#d_fecha').html(`<b>Fecha y hora:</b> ${data.post[0].fecha}`);
+        var html = '';
+        var total = 0;
+        for (var i = 0; i < data.post.length; i++) {
+          html += `<tr>
+                    <td>${data.post[i].cantidad}</td>
+                    <td>${data.post[i].nombreProducto}</td>
+                    <td class="text-right">$${data.post[i].precioPublico}</td>
+                    <td class="text-right">$${parseInt(data.post[i].precioPublico) * parseInt(data.post[i].cantidad)}</td>
+                  </tr>`;
+          total = parseInt(data.post[i].subtotal);
+        }
+        html += `<tr>
+										<td colspan="3" style="text-align: right;">Total.</td>
+										<td style="text-align: right;">$${total}</td>
+									</tr>`;
+        $('#tabla-contenido').html(html);
         $('#modalDetalle').modal('show');
-        $('#d_id').val(data.post.idEmpleados);
-        $('#d_nombre').val(data.post.nombres);
-        $('#d_apellidoP').val(data.post.apellidoP);
-        $('#d_apellidoM').val(data.post.apellidoM);
-        $('#d_correo').val(data.post.correo);
-        $(`#d_puesto > option[value=${data.post.idPuestos}]`).attr("selected",true);
+        
       }
     });
   });
@@ -572,6 +653,15 @@
     if(mes<10)
       mes='0'+mes
     return `${ano}-${mes}-${dia}` 
+  }
+
+  function imprimir(){
+    var ficha = document.getElementById('factura');
+	  var ventimp = window.open(' ', 'popimpr');
+	  ventimp.document.write( ficha.innerHTML );
+	  ventimp.document.close();
+	  ventimp.print( );
+	  ventimp.close();
   }
 
 </script>

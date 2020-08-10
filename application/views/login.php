@@ -4,13 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- BOOTSTRAP -->
-  <script type="text/javascript" src="<?php echo base_url('assets/js/jquery-3.5.1.min.js'); ?>"></script>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.min.css'); ?>">
+  <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap-grid.min.css'); ?>">
+  <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap-reboot.min.css'); ?>">
   <!-- ESTILOS PERSONALIZADOS -->
   <link rel="stylesheet" href="<?php echo base_url('assets/css/login.css'); ?>">
   <!-- FONT AWESOME -->
   <script src="https://kit.fontawesome.com/5aa15e27e7.js" crossorigin="anonymous"></script>
   <title>Inicio de sesion</title>
+  <link rel="icon"  type="image/png" href="<?php echo base_url('assets/imagenes/Logo.png'); ?>">
 </head>
 <body>
   <div class="container">
@@ -34,6 +36,10 @@
     </div>
   </div>
 
+
+  <script type="text/javascript" src="<?php echo base_url('assets/js/jquery-3.5.1.min.js'); ?>"></script>
+  <script type="text/javascript" src="<?php echo base_url('assets/js/bootstrap.min.js'); ?>"></script>
+  <script type="text/javascript" src="<?php echo base_url('assets/js/bootstrap.bundle.min.js'); ?>"></script>
 
   <script>
     $('#btn_login').click(function(e){

@@ -10,13 +10,18 @@
       </div>
       <div class="modal-body">
         <form action="" method="POST" id="FormAgregar" class="mb-4">
-          <div class="form-group">
+          <div class="">
             <div class="form-row">
               <div class="form-group col-md-3">
+                <input type="number" class="form-control" id="idProducto" name="idProducto" style="display: none">
                 <label for="nombreProducto">Producto</label>
                 <input type="text" class="form-control" id="nombreProducto" name="nombreProducto" disabled> 
               </div>
-              <div class="form-group col-md-6">
+              <div class="form-group col-md-2">
+                <label for="existencia">Existencia</label>
+                <input type="number" class="form-control" id="existencia" name="existencia" disabled> 
+              </div>
+              <div class="form-group col-md-4">
                 <label for="vendedor">Vendedor</label>
                 <input type="text" class="form-control" id="vendedor" name="vendedor" value="<?php echo $this->session->userdata('s_nombreUsuario');?>" disabled> 
               </div>
@@ -26,7 +31,27 @@
               </div>
             </div>
           </div>
-          <div class="form-group">
+          <div class="">
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <label for="clienteNombre">Comprador</label>
+                <input type="text" class="form-control" id="clienteNombre" name="clienteNombre"> 
+              </div>
+              <div class="form-group col-md-3">
+                <label for="clienteApellidoP">Apellido Paterno</label>
+                <input type="text" class="form-control" id="clienteApellidoP" name="clienteApellidoP"> 
+              </div>
+              <div class="form-group col-md-3">
+                <label for="clienteApellidoM">Apellido Materno</label>
+                <input type="text" class="form-control" id="clienteApellidoM" name="clienteApellidoM"> 
+              </div>
+              <div class="form-group col-md-3">
+                <label for="clienteContacto">Contacto</label>
+                <input type="text" class="form-control" id="clienteContacto" name="clienteContacto">
+              </div>
+            </div>
+          </div>
+          <div class="">
             <div class="form-row">
               <div class="form-group col-md-3">
                 <label for="precioPublico">Precio Publico</label>
@@ -38,7 +63,7 @@
               </div>
               <div class="form-group col-md-3">
                 <label for="cantidad">Cantidad</label>
-                <input type="number" class="form-control" id="cantidad" name="cantidad">
+                <input type="number" class="form-control" id="cantidad" min=1 name="cantidad">
               </div>
               <div class="form-group col-md-3">
                 <label for="total">Total</label>

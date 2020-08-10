@@ -29,6 +29,7 @@ class Productos_modelo extends CI_Model {
       $this->db->from('productos produc');
       $this->db->join('proveedores prov', 'produc.idProveedores = prov.idProveedores');
       $this->db->where('produc.status', 1);
+      $this->db->where('produc.existencia >=', 1);
   
       $res = $this->db->get();
   
@@ -110,6 +111,10 @@ class Productos_modelo extends CI_Model {
         if(count($res->result()) > 0) {
           return $res->row();
         }
+      }
+
+      public function restarStock($cantidad, $idProducto) {
+        $this->db->query('update productos set existencia=existencia -'.$cantidad.' where idProductos ='.$idProducto.';');
       }
     
       public function actualizarProducto($data) {
