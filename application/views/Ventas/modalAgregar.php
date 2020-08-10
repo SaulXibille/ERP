@@ -75,7 +75,7 @@
           <button type="button" class="btn btn-success" title="Agregar al Carrito" id="pAgregar"><i class="fas fa-shopping-cart" style="color: white;"></i></button>
         </form>
         <div class="table-responsive">
-          <table id="tabla-lista" class="table table-striped table-bordered">
+          <table id="tabla-lista" class="table table-striped table-bordered" style="width: 100%;">
             <thead>
               <tr id="table-header">
                 <th scope="col">Producto</th>

@@ -149,14 +149,13 @@
         {"render": function(data, type, row, meta) {
           var a = '';
           if(row.status == 'Devuelto') {
-            a = `<i class="fas fa-toggle-off" value="${row.idVentas}" id="activar" title="Activar"></i> <i class="fas fa-pencil-alt" value="${row.idVentas}" id="editar" title="Editar"></i> <i class="fas fa-info" value="${row.idVentas}" id="detalle" title="Detalles"></i>`;
+            a = `<i class="fas fa-toggle-off" value="${row.idVentas}" id="activar" title="Activar"></i> <i class="fas fa-info" value="${row.idVentas}" id="detalle" title="Detalles"></i>`;
           } else {
-            a = `<i class="fas fa-toggle-on" value="${row.idVentas}" id="desactivar" title="Desactivar"></i> <i class="fas fa-pencil-alt" value="${row.idVentas}" id="editar" title="Editar"></i> <i class="fas fa-info" value="${row.idVentas}" id="detalle" title="Detalles"></i>`;
+            a = `<i class="fas fa-toggle-on" value="${row.idVentas}" id="desactivar" title="Desactivar"></i> <i class="fas fa-info" value="${row.idVentas}" id="detalle" title="Detalles"></i>`;
           }
-          
           return a;
         }}
-      ]
+      ],
     });
   }
 
@@ -361,52 +360,84 @@
     } else if(clienteNombre === "" || clienteApellidoP === "" || clienteApellidoM === "" || clienteContacto === "") {
       toastr["error"]("Completar todos los campos");
     } else {
-      var subtotal = 0;
-      for (var i = 0; i < listaProductos.length; i++){
-        subtotal += parseInt(listaProductos[i].total);
-      }
-      $.ajax({
-        url: "<?php echo base_url(); ?>Ventas/agregar",
-        type: "POST",
-        dataType: "json",
-        data: {
-          subtotal: subtotal,
-          idEmpleados: idEmpleado,
-          clienteNombre: clienteNombre,
-          clienteApellidoP: clienteApellidoP,
-          clienteApellidoM: clienteApellidoM,
-          clienteContacto: clienteContacto
-        },
-        success: function(data) {
-          if(data.respuesta == 'exito') {
-            toastr["success"](data.mensaje);
-            var idVenta = data.post.idVenta;
-            var lista = listaProductos;
-            $.ajax({
-              url: "<?php echo base_url(); ?>Ventas/agregarDetalleVentas",
-              type: "POST",
-              dataType: "json",
-              data: {
-                idVenta: idVenta,
-                lista: lista,
-              },
-              success: function(data) {
-                console.log('DESPUES DE AGREGAR');
-                console.log(listaProductos);
-                listaProductos = [];
-                console.log(listaProductos);
-              }
-            });
-            $('#tabla').DataTable().destroy();
-            // $('#tabla-lista').DataTable().destroy();
-            obtenerVentas();
-            $("#exampleModalCenter").modal('hide');
-            document.getElementById("FormAgregar").reset();
-            $("#fecha").val(fecha);
 
-          } else {
-            toastr["error"](data.mensaje);
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: 'btn btn-success',
+          cancelButton: 'btn btn-danger mr-2'
+        },
+        buttonsStyling: false
+      })
+
+      swalWithBootstrapButtons.fire({
+        title: '¿Seguro que quieres realizar la venta?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, vender!',
+        cancelButtonText: 'No, cancelar!',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.value) {
+
+          var subtotal = 0;
+          for (var i = 0; i < listaProductos.length; i++){
+            subtotal += parseInt(listaProductos[i].total);
           }
+          $.ajax({
+            url: "<?php echo base_url(); ?>Ventas/agregar",
+            type: "POST",
+            dataType: "json",
+            data: {
+              subtotal: subtotal,
+              idEmpleados: idEmpleado,
+              clienteNombre: clienteNombre,
+              clienteApellidoP: clienteApellidoP,
+              clienteApellidoM: clienteApellidoM,
+              clienteContacto: clienteContacto
+            },
+            success: function(data) {
+              if(data.respuesta == 'exito') {
+
+                swalWithBootstrapButtons.fire(
+                  'Vendido!',
+                  'Se realizo la venta correctamente!',
+                  'success'
+                )
+                toastr["success"](data.mensaje);
+                var idVenta = data.post.idVenta;
+                var lista = listaProductos;
+                $.ajax({
+                  url: "<?php echo base_url(); ?>Ventas/agregarDetalleVentas",
+                  type: "POST",
+                  dataType: "json",
+                  data: {
+                    idVenta: idVenta,
+                    lista: lista,
+                  },
+                  success: function(data) {
+                    listaProductos = [];
+                  }
+                });
+                $('#tabla').DataTable().destroy();
+                // $('#tabla-lista').DataTable().destroy();
+                obtenerVentas();
+                $("#exampleModalCenter").modal('hide');
+                document.getElementById("FormAgregar").reset();
+                $("#fecha").val(fecha);
+
+              } else {
+                toastr["error"](data.mensaje);
+              }
+            }
+          });          
+        } else if (
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          swalWithBootstrapButtons.fire(
+            'Cancelado!',
+            'No se realizo la venta!',
+            'error'
+          )
         }
       });
     }
