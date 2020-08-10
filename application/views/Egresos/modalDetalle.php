@@ -27,7 +27,7 @@
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="d_subtotal">Subtotal</label>
-                <input type="number" class="form-control" id="d_subtotal" name="d_subtotal" disabled>
+                <input type="text" class="form-control" id="d_subtotal" name="d_subtotal" disabled>
               </div>
               <div class="form-group col-md-6">
                 <label for="d_fecha">Fecha</label>

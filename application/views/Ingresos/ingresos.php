@@ -111,7 +111,9 @@ $(document).ready(function() {
       "data" : data.posts,
       "columns": [
         {"data": "fecha"},
-        {"data": "subtotal"},
+         {"render": function(data, type, row, meta) {
+          return `$${row.subtotal}`;
+        }},
         {"render": function(data, type, row, meta) {
           var a = '';
           
@@ -140,7 +142,7 @@ $(document).ready(function() {
             console.log(data);
             $('#modalDetalleVenta').modal('show');
             $('#d_fechas').val(data.post[0].fecha);
-            $('#d_total').val(data.post[0].subtotal);
+            $('#d_total').val("$"+data.post[0].subtotal);
             $('#d_ventas').val(data.post[0].num);
         }
         });

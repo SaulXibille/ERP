@@ -19,7 +19,7 @@
               </div>
               <div class="form-group col-md-6">
                 <label for="d_total">Total ventas</label>
-                <input type="number" class="form-control" id="d_total" name="d_total" disabled>
+                <input type="text" class="form-control" id="d_total" name="d_total" disabled>
               </div>
             </div>
           </div>

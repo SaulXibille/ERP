@@ -137,7 +137,9 @@ $(document).ready(function() {
       "columns": [
         {"data": "serie"},
         {"data": "folio"},
-        {"data": "subtotal"},
+        {"render": function(data, type, row, meta) {
+          return `$${row.subtotal}`;
+        }},
         {"data": "fecha"},
         {"data": "razonSocial"},
         {"data": "status"},
@@ -214,7 +216,7 @@ $(document).ready(function() {
         $('#d_id').val(data.post.id_Egresos);
         $('#d_serie').val(data.post.serie);
         $('#d_folio').val(data.post.folio);
-        $('#d_subtotal').val(data.post.subtotal);
+        $('#d_subtotal').val("$"+data.post.subtotal);
         $('#d_fecha').val(data.post.fecha);
         $(`#d_proveedor > option[value=${data.post.idProveedores}]`).attr("selected",true);
         $('#d_fechaCreacion').val(data.post.createdAt);
