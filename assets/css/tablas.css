@@ -15,6 +15,13 @@
 	background-color: #b4dced;
 }
 
+
+.table-striped tbody tr:nth-of-type(odd) {
+	background-color: #fff !important;
+}
+
+
+
 #tabla i {
 	margin-left: 5px;
 	font-size: 25px;
