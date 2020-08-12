@@ -13,6 +13,16 @@
         Agregar
       </button>
     </div>
+
+    <div id="filtroo">
+      <label for="filtro">Mostrar:</label>
+      <select class="form-control" id="filtro">
+        <option value="">Todos</option>
+        <option value="1">Activos</option>
+        <option value="0">Inactivos</option>
+      </select>
+    </div>
+
     <div class="table-responsive">
       <table id="tabla" class="table table-striped table-bordered">
         <thead>
@@ -33,6 +43,39 @@
 <?php $this->load->view('template/footer'); ?>
 
 <script>
+  $(document).ready(function() {
+  obtenerNominas();
+  $("#filtro").on('change', function() {
+    var valor = $(this).val();
+    if(valor === "") {
+      obtenerNominas();
+    } else {
+      $.ajax({
+        url: "<?php echo base_url(); ?>Nominas/filtrarNominas",
+        type: "POST",
+        dataType: "json",
+        data: {
+          status: valor
+        },
+        success: function(data) {
+            if(data.respuesta == 'error') {
+              toastr["error"]("No hay registros para mostrar");
+            } else {
+              for (var i = 0; i < data.posts.length; i++) {
+                if (data.posts[i].status == 1) {
+                  data.posts[i].status = "Activo";
+                } else {
+                  data.posts[i].status = "Inactivo";
+                }
+              }
+              $('#tabla').DataTable().destroy();
+              inicializarTabla(data);
+            }
+          }
+      });
+    }
+  });
+});
 
     // CONSULTA - MOSTRAR EN LA TABLA
   function obtenerNominas() {
@@ -51,6 +94,12 @@
         }
 
         $('#tabla').DataTable().destroy();
+        inicializarTabla(data);
+      }
+    });
+  }
+
+  function inicializarTabla(data){
         $('#tabla').DataTable({
           // responsive: true,
           language: {
@@ -85,18 +134,23 @@
             {"data": "nombres"},
             {"data": "apellidoP"},
             {"data": "apellidoM"},
-            {"data": "sueldo"},
+            {"render": function(data, type, row, meta) {
+          return `$${row.sueldo}`;
+            }},
             {"data": "status"},
             {"render": function(data, type, row, meta) {
-              var a = `<i class="fas fa-pencil-alt" value="${row.idNominas}" id="editar" title="Editar"></i> <i class="fas fa-trash-alt" value="${row.idNominas}" id="eliminar" title="Eliminar"></i> <i class="fas fa-info" value="${row.idNominas}" id="detalle" title="Detalles"></i>`;
+              if(row.status == 'Inactivo') {
+                a = `<i class="fas fa-toggle-off" value="${row.idNominas}" id="activar" title="Activar"></i> <i class="fas fa-pencil-alt" value="${row.idNominas}" id="editar" title="Editar"></i> <i class="fas fa-info" value="${row.idNominas}" id="detalle" title="Detalles"></i>`;
+              } else {
+                a = `<i class="fas fa-toggle-on" value="${row.idNominas}" id="desactivar" title="Desactivar"></i> <i class="fas fa-pencil-alt" value="${row.idNominas}" id="editar" title="Editar"></i> <i class="fas fa-info" value="${row.idNominas}" id="detalle" title="Detalles"></i>`;
+              }
+              /* var a = `<i class="fas fa-pencil-alt" value="${row.idNominas}" id="editar" title="Editar"></i> <i class="fas fa-trash-alt" value="${row.idNominas}" id="eliminar" title="Eliminar"></i> <i class="fas fa-info" value="${row.idNominas}" id="detalle" title="Detalles"></i>`; */
               return a;
             }}
           ]
         });
 
       }
-    });
-  }
 
   // AGREGAR
   $(document).on("click", "#agregar", function(e) {
@@ -132,6 +186,132 @@
       });
       document.getElementById("FormAgregar").reset();
     }
+  });
+
+  // DESACTIVAR
+  $(document).on("click", "#desactivar", function(e) {
+    e.preventDefault();
+    var idNomina = $(this).attr("value");
+    var status = $(this).attr("id");
+    console.log(idNomina);
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger mr-2'
+      },
+      buttonsStyling: false
+    })
+
+    swalWithBootstrapButtons.fire({
+      title: '¿Seguro que quieres desactivarlo?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si, desactivarlo!',
+      cancelButtonText: 'No, cancelar!',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.value) {
+
+        $.ajax({
+          url: "<?php echo base_url()?>Nominas/cambiarStatus",
+          type: "POST",
+          dataType: "json",
+          data: {
+            idNomina: idNomina,
+            status: status
+          },
+          success: function(data) {
+            $('#tabla').DataTable().destroy();
+            obtenerNominas();
+            if(data.respuesta == "exito") {
+              swalWithBootstrapButtons.fire(
+                'Desactivado!',
+                'Registro eliminado correctamente!',
+                'success'
+              )
+            } else {
+              swalWithBootstrapButtons.fire(
+                'Cancelado!',
+                'No se desactivo el registro!',
+                'error'
+              )
+            }
+          }
+        });
+        
+      } else if (
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire(
+          'Cancelado!',
+          'No se desactivo el registro!',
+          'error'
+        )
+      }
+    });
+  });
+
+  //ACTIVAR 
+  $(document).on("click", "#activar", function(e) {
+    e.preventDefault();
+    var idNomina = $(this).attr("value");
+    var status = $(this).attr("id");
+
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger mr-2'
+      },
+      buttonsStyling: false
+    })
+
+    swalWithBootstrapButtons.fire({
+      title: '¿Seguro que quieres activarlo?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si, activarlo!',
+      cancelButtonText: 'No, cancelar!',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.value) {
+
+        $.ajax({
+          url: "<?php echo base_url()?>Nominas/cambiarStatus",
+          type: "POST",
+          dataType: "json",
+          data: {
+            idNomina: idNomina,
+            status: status
+          },
+          success: function(data) {
+            $('#tabla').DataTable().destroy();
+            obtenerNominas();
+            if(data.respuesta == "exito") {
+              swalWithBootstrapButtons.fire(
+                'Activado!',
+                'Registro activado correctamente!',
+                'success'
+              )
+            } else {
+              swalWithBootstrapButtons.fire(
+                'Cancelado!',
+                'No se activo el registro!',
+                'error'
+              )
+            }
+          }
+        });
+        
+      } else if (
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire(
+          'Cancelado!',
+          'No se activo el registro!',
+          'error'
+        )
+      }
+    });
   });
 
   // ELIMINAR
