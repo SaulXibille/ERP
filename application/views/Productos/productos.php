@@ -138,8 +138,12 @@
             {"data": "existencia"},
             {"data": "nombreProducto"},
             {"data": "marca"},
-            {"data": "costo"},
-            {"data": "precioPublico"},
+            {"render": function(data, type, row, meta) {
+          return `$${row.costo}`;
+            }},
+            {"render": function(data, type, row, meta) {
+          return `$${row.precioPublico}`;
+            }},
             {"data": "status"},
             {"render": function(data, type, row, meta) {
               if(row.status == 'Inactivo') {
@@ -147,7 +151,6 @@
               } else {
                 a = `<i class="fas fa-toggle-on" value="${row.idProductos}" id="desactivar" title="Desactivar"></i> <i class="fas fa-pencil-alt" value="${row.idProductos}" id="editar" title="Editar"></i> <i class="fas fa-info" value="${row.idProductos}" id="detalle" title="Detalles"></i> <i class="fas fa-plus" value="${row.idProductos}" id="stock" title="Stock"></i>`;
               }
-              /* var a = `<i class="fas fa-pencil-alt" value="${row.idProductos}" id="editar" title="Editar"></i> <i class="fas fa-trash-alt" value="${row.sku}" id="eliminar" title="Eliminar"></i> <i class="fas fa-info" value="${row.idProductos}" id="detalle" title="Detalles"></i> <i class="fas fa-plus" value="${row.idProductos}" id="stock" title="Stock"></i>`; */
               return a;
             }}
           ]

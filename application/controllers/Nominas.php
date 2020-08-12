@@ -34,6 +34,21 @@ class Nominas extends CI_Controller {
 		}
 	}
 
+	public function filtrarNominas() {
+		if($this->input->is_ajax_request()) {
+			$status = $this->input->post('status');
+
+			if($posts = $this->Nominas_modelo->filtrarNominas($status)){
+				$data = array('respuesta' => 'exito', 'posts' => $posts);
+			} else {
+				$data = array('respuesta' => 'error', 'mensaje' => 'No se encontro el registro');
+			}
+			echo json_encode($data);
+		} else {
+
+		}
+	}
+
 	public function agregar() {
 		if($this->input->is_ajax_request()) {
 			$this->form_validation->set_rules('idEmpleados', 'Empleado', 'required');
@@ -57,6 +72,22 @@ class Nominas extends CI_Controller {
 			
 		}
 	}
+
+	public function cambiarStatus() {
+		if($this->input->is_ajax_request()) {
+			$idNomina = $this->input->post('idNomina');
+			$status = $this->input->post('status');
+
+			if($this->Nominas_modelo->cambiarStatus($idNomina, $status)){
+				$data = array('respuesta' => 'exito');
+			} else {
+				$data = array('respuesta' => 'error');
+			}
+			echo json_encode($data);
+		} else {
+
+		}
+    }
 
 	public function eliminar() {
 		if($this->input->is_ajax_request()) {
