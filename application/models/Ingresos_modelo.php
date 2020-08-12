@@ -74,5 +74,24 @@ class Ingresos_modelo extends CI_Model {
         return 0;
         }
     }
+
+    public function ingresos_egresos() {
+        $this->db->select('SUM(subtotal) AS total');
+        $this->db->from('ventas');
+        $query1 = $this->db->get_compiled_select();
+
+        $this->db->select('SUM(subtotal) AS total');
+        $this->db->from('egresos');
+        $query2 = $this->db->get_compiled_select();       
+
+        $res = $this->db->query($query1 . ' UNION ALL ' . $query2);
+
+        if($res->num_rows() > 0) {
+            $r = $res->row();
+            return $res->result();
+        }else {
+            return 0;
+        }
+    }
   
 }

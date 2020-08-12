@@ -473,12 +473,14 @@
           dataType: "json",
           data: {
             idVenta: idVenta,
-            status: status
+            status: status,
+            mensaje: 'sumarStock',
           },
           success: function(data) {
             $('#tabla').DataTable().destroy();
             obtenerVentas();
             if(data.respuesta == "exito") {
+              console.log(data.posts);
               swalWithBootstrapButtons.fire(
                 'Desactivado!',
                 'Registro desactivado correctamente!',
@@ -536,9 +538,11 @@
           dataType: "json",
           data: {
             idVenta: idVenta,
-            status: status
+            status: status,
+            mensaje: 'restarStock',
           },
           success: function(data) {
+            console.log(data.posts);
             $('#tabla').DataTable().destroy();
             obtenerVentas();
             if(data.respuesta == "exito") {
@@ -567,72 +571,6 @@
         )
       }
     });
-  });
-
-  // EDITAR
-  $(document).on("click", "#editar", function(e) {
-    e.preventDefault();
-    var idEmpleado = $(this).attr("value");
-    $.ajax({
-      url: "<?php echo base_url()?>Colaboradores/modificar",
-      type: "POST",
-      dataType: "json",
-      data: {
-        idEmpleado: idEmpleado
-      },
-      success: function(data) {
-        // $('#tabla').DataTable().destroy();
-        // obtenerEmpleados();
-        // console.log(data);
-        $('#modalEditar').modal('show');
-        $('#e_id').val(data.post.idEmpleados);
-        $('#e_nombre').val(data.post.nombres);
-        $('#e_apellidoP').val(data.post.apellidoP);
-        $('#e_apellidoM').val(data.post.apellidoM);
-        $('#e_correo').val(data.post.correo);
-        $(`#e_puesto > option[value=${data.post.idPuestos}]`).attr("selected",true);
-      }
-    });
-  });
-
-  // EDITAR - ACTUALIZAR
-  $(document).on("click", "#actualizar", function(e) {
-    e.preventDefault();
-
-    var idEmpleados = $('#e_id').val();
-    var nombres = $('#e_nombre').val();
-    var apellidoP = $('#e_apellidoP').val();
-    var apellidoM = $('#e_apellidoM').val();
-    var correo = $('#e_correo').val();
-    var puesto = $("#e_puesto").val();
-
-    if(nombres === "" || apellidoP === "" || apellidoM === "" || correo === "" || puesto == 0) {
-      toastr["error"]("Completar todos los campos");
-    } else {
-      $.ajax({
-        url: "<?php echo base_url()?>Colaboradores/actualizar",
-        type: "POST",
-        dataType: "json",
-        data: {
-          idEmpleados: idEmpleados,
-          nombres: nombres,
-          apellidoP: apellidoP,
-          apellidoM: apellidoM,
-          correo: correo,
-          idPuestos: puesto
-        },
-        success: function(data) {
-          if(data.respuesta == 'exito') {
-            $('#tabla').DataTable().destroy();
-            obtenerEmpleados();
-            $("#modalEditar").modal('hide');
-            toastr["success"](data.mensaje);
-          } else {
-            toastr["error"](data.mensaje);
-          }
-        }
-      }); 
-    }
   });
 
   // CONSULTAR - DETALLE

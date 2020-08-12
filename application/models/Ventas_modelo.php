@@ -79,8 +79,15 @@ class Ventas_modelo extends CI_Model {
     }
     $this->db->where('idVentas', $idVenta);
 		$this->db->set('status', $status);
-		$this->db->update('ventas');
-		return ($this->db->affected_rows() > 0);
+    $this->db->update('ventas');
+    
+    $this->db->select("*");
+    $this->db->from('ventas v');
+    $this->db->join('detalleventas dv', 'v.idVentas = dv.idVentas');
+    $this->db->where('v.idVentas', $idVenta);
+
+		$res = $this->db->get();
+    return $res->result();
   }
 
   public function modificarEmpleado($idEmpleado) {

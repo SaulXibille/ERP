@@ -73,8 +73,21 @@ class Ingresos extends CI_Controller {
 		} else {
 
 		}
-    }
+		}
+		
 
+		public function ingresos_egresos() {
+			if($this->input->is_ajax_request()) {
+				if($posts = $this->Ingresos_modelo->ingresos_egresos()){
+					$data = array('respuesta' => 'exito', 'post' => $posts);
+				} else {
+					$data = array('respuesta' => 'error', 'mensaje' => 'No se encontro el registro');
+				}
+				echo json_encode($data);
+			} else {
+
+			}
+		}
 	
 	
 }

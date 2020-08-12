@@ -23,6 +23,25 @@ class Productos_modelo extends CI_Model {
         }
     }
 
+    public function productosMasVendidos(){
+      $this->db->select('p.nombreProducto, SUM(dv.cantidad) AS TotalVentas');
+      $this->db->from('detalleventas dv');
+      $this->db->join('productos p', 'p.idProductos = dv.idProductos');
+      $this->db->join('ventas v', 'v.idVentas = dv.idVentas');
+      $this->db->where('v.status', 1);
+      $this->db->group_by('dv.idProductos');
+      $this->db->order_by('SUM(dv.cantidad)', 'desc');
+      $this->db->limit(3);
+      $res = $this->db->get();
+
+      if($res->num_rows() > 0) {
+          $r = $res->row();
+          return $res->result();
+      }else{
+          return 0;
+      }
+    }
+
     public function obtenerProductosActivos(){
 
       $this->db->select('produc.nombreProducto, produc.marca, produc.costo, produc.precioPublico, produc.status, produc.numSerie, produc.modelo, produc.tipo, prov.razonSocial, produc.idProductos, produc.existencia');
@@ -115,6 +134,10 @@ class Productos_modelo extends CI_Model {
 
       public function restarStock($cantidad, $idProducto) {
         $this->db->query('update productos set existencia=existencia -'.$cantidad.' where idProductos ='.$idProducto.';');
+      }
+
+      public function sumarStock($cantidad, $idProducto) {
+        $this->db->query('update productos set existencia=existencia +'.$cantidad.' where idProductos ='.$idProducto.';');
       }
     
       public function actualizarProducto($data) {

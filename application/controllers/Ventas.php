@@ -131,63 +131,43 @@ class Ventas extends CI_Controller {
 	}
 
 	public function cambiarStatus() {
+
+		function objectToArray($data) {
+
+			if (is_object($data)) {
+					$data = get_object_vars($data);
+			}
+	
+			if (is_array($data)) {
+					return array_map(__FUNCTION__, $data);
+			}
+			else {
+					return $data;
+			}
+		}
+
 		if($this->input->is_ajax_request()) {
 			$idVenta = $this->input->post('idVenta');
 			$status = $this->input->post('status');
+			$mensaje = $this->input->post('mensaje');
 
-			if($this->Ventas_modelo->cambiarStatus($idVenta, $status)){
-				$data = array('respuesta' => 'exito');
+			if($posts = $this->Ventas_modelo->cambiarStatus($idVenta, $status)){
+				$data = array('respuesta' => 'exito', 'posts' => $posts);
+				$total = count($posts);
+				$post = objectToArray($posts);
+				for ($i = 0; $i < $total; ++$i){
+					$idProducto = $post[$i]['idProductos'];
+					$cantidad = $post[$i]['cantidad'];
+					if($mensaje == 'sumarStock') {
+						$this->Productos_modelo->sumarStock($cantidad, $idProducto);
+					}else {
+						$this->Productos_modelo->restarStock($cantidad, $idProducto);
+					}
+				}
 			} else {
 				$data = array('respuesta' => 'error');
 			}
 			echo json_encode($data);
-		} else {
-
-		}
-	}
-
-	public function modificar() {
-		if($this->input->is_ajax_request()) {
-			$idEmpleado = $this->input->post('idEmpleado');
-
-			if($post = $this->Colaboradores_modelo->modificarEmpleado($idEmpleado)){
-				$data = array('respuesta' => 'exito', 'post' => $post);
-			} else {
-				$data = array('respuesta' => 'error', 'mensaje' => 'No se encontro el registro');
-			}
-			echo json_encode($data);
-		} else {
-
-		}
-	}
-
-	public function actualizar() {
-		if($this->input->is_ajax_request()) {
-			$this->form_validation->set_rules('nombres', 'Nombres', 'required');
-			$this->form_validation->set_rules('apellidoP', 'Apellido Paterno', 'required');
-			$this->form_validation->set_rules('apellidoM', 'Apellido Materno', 'required');
-			$this->form_validation->set_rules('idPuestos', 'Puesto', 'required');
-			$this->form_validation->set_rules('correo', 'Correo', 'required|valid_email');
-
-			if($this->form_validation->run() == FALSE) {
-				$data = array('respuesta' => 'error', 'mensaje' => validation_errors());
-			} else {
-				$data['idEmpleados'] = $this->input->post('idEmpleados');
-				$data['nombres'] = $this->input->post('nombres');
-				$data['apellidoP'] = $this->input->post('apellidoP');
-				$data['apellidoM'] = $this->input->post('apellidoM');
-				$data['correo'] = $this->input->post('correo');
-				$data['idPuestos'] = $this->input->post('idPuestos');
-
-				if($this->Colaboradores_modelo->actualizarEmpleado($data)){
-					$data = array('respuesta' => 'exito', 'mensaje' => 'Actualizado con exito');
-				} else {
-					$data = array('respuesta' => 'error', 'mensaje' => 'Error al actualizar');
-				}
-			}
-
-			echo json_encode($data);
-			// echo "ajax request";
 		} else {
 
 		}

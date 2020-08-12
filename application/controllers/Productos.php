@@ -197,4 +197,17 @@ class Productos extends CI_Controller{
 
 		}
 	}
+
+	public function productosMasVendidos() {
+		if($this->input->is_ajax_request()) {
+			if($posts = $this->Productos_modelo->productosMasVendidos()) {
+				$data = array('response' => 'success', 'posts' => $posts);
+			} else {
+				$data = array('response' => 'error', 'message' => 'No se encontraron registros');
+			}
+			echo json_encode($data);
+		} else {
+			
+		}
+    }
 }
