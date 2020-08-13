@@ -2,7 +2,6 @@
 <?php $this->load->view('template/menu'); ?>
 
 <?php $this->load->view('Ventas/modalAgregar'); ?>
-<?php $this->load->view('Ventas/modalEditar'); ?>
 <?php $this->load->view('Ventas/modalDetalle'); ?>
 <?php $this->load->view('Ventas/modalProductos'); ?>
 
@@ -34,7 +33,6 @@
       </div>
     </div>
     
-        
     <div class="table-responsive">
       <table id="tabla" class="table table-striped table-bordered">
         <thead>
@@ -341,11 +339,33 @@
 
   //AGREGAR A LISTA DE VENTA
   $(document).on("click", "#pAgregar", function(e) {
-    e.preventDefault();
-    if($("#cantidad").val() > $("#existencia").val()) {
-      toastr["error"]("No hay suficiente en existencia!");
-    } else if($("#cantidad").val() === "") {
+
+    var nombreProducto = $("#nombreProducto").val();
+    var precioPublico = $("#precioPublico").val();
+    var costo = $("#costo").val();
+    var cantidad = parseInt($("#cantidad").val());
+    var existencia = parseInt($("#existencia").val());
+    var total = $("#total").val();
+    var clienteNombre = $("#clienteNombre").val();
+    var clienteApellidoP = $("#clienteApellidoP").val();
+    var clienteApellidoM = $("#clienteApellidoM").val();
+    var clienteContacto = $("#clienteContacto").val();
+
+    if(nombreProducto === "" || precioPublico === "" || clienteNombre === "" || clienteApellidoP === "" || clienteApellidoM === "" ||  clienteContacto === "") {
+      toastr["error"]("Completar todos los campos");
+
+    } else if (cantidad > existencia) {
+        toastr["error"]("No hay suficiente en existencia!");
+        // console.log(cantidad);
+
+    } else if (cantidad <= 0) {
+      toastr["error"]("Ingrese valores validos!");
+      // console.log(cantidad);
+
+    } else if ($("#cantidad").val() === "") {
       toastr["error"]("Ingrese una cantidad!");
+      console.log(cantidad);
+      console.log(existencia);
     }else {
       var datos = {
         nombre: $("#nombreProducto").val(),
@@ -354,8 +374,6 @@
         total: $("#total").val(),
         idProducto: $("#idProducto").val(),
       }
-      var existencia = $("#existencia").val();
-      var cantidad = $("#cantidad").val();
       existencia -= cantidad;
       $("#existencia").val(existencia);
       listaProductos.push(datos);
@@ -397,8 +415,6 @@
     
     if(listaProductos.length === 0) {
       toastr["error"]("No hay productos registrados!");
-    } else if(clienteNombre === "" || clienteApellidoP === "" || clienteApellidoM === "" || clienteContacto === "") {
-      toastr["error"]("Completar todos los campos");
     } else {
 
       const swalWithBootstrapButtons = Swal.mixin({

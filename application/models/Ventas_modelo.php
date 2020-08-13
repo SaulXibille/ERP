@@ -73,7 +73,7 @@ class Ventas_modelo extends CI_Model {
   
   public function agregarVenta($data) {
     $this->db->insert('ventas', $data);
-
+    
     $this->db->select("MAX(idVentas) as idVenta");
     $this->db->from('ventas');
     $res = $this->db->get();
