@@ -17,7 +17,7 @@
                             <input type="text" class="form-control" id="nombreProducto" name="nombreProducto">
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="costo">Costo</label>
+                            <label for="costo">Costo unitario</label>
                             <input type="number" class="form-control" id="costo" name="costo">
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                             <input type="text" class="form-control" id="existencia" name="existencia">
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="subtotal">Costo Total</label>
+                            <label for="subtotal">Total de Factura</label>
                             <input type="number" class="form-control" id="subtotal" name="subtotal">
                         </div>   
                     </div>  

@@ -14,7 +14,7 @@ class Egresos extends CI_Controller {
 	public function index() {
 		if($this->session->userdata('is_logged')) {
 			$data['titulo'] = 'Egresos';
-			$data['proveedores'] = $this->Proveedores_modelo-> obtenerProveedores();
+			$data['proveedores'] = $this->Proveedores_modelo-> obtenerProveedoresActivos();
 			$this->load->view('Egresos/egresos', $data);
 		} else {
 			$this->load->view('login');

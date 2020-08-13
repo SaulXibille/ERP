@@ -18,7 +18,7 @@
                             <input type="text" class="form-control" id="d_nombreProducto" name="d_nombreProducto" disabled>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="d_costo">Costo</label>
+                            <label for="d_costo">Costo unitario</label>
                             <input type="number" class="form-control" id="d_costo" name="d_costo" disabled>
                         </div>
                     </div>

@@ -17,7 +17,7 @@
 <body>
   <div class="container">
     <div class="card card-container">
-        <i class="fas fa-crow logo"></i>
+        <img src="assets/imagenes/login.png" alt="">
         <form class="form-signin" id="form_login" name="form_login">
             <span id="reauth-email" class="reauth-email"></span>
             <input type="email" id="correo" name="correo" class="form-control" placeholder="Correo Electronico" required>

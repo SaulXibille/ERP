@@ -11,7 +11,7 @@
       <h1 class="title">Ingresos</h1>
     </div>
 
-    <div id="filtroo">
+    <div id="filtroo2">
       <label for="filtro">Mostrar por:</label>
       <select class="form-control" id="filtro">
         <option value="">Día</option>

@@ -13,7 +13,7 @@ class Productos extends CI_Controller{
     public function index(){
         if($this->session->userdata('is_logged')) {
 			 $data['titulo'] = 'Productos';
-			 $data['proveedores'] = $this->Proveedores_modelo->obtenerProveedores();
+			 $data['proveedores'] = $this->Proveedores_modelo->obtenerProveedoresActivos();
 			$this->load->view('Productos/productos', $data);
 		} else {
 			$this->load->view('login');
@@ -51,7 +51,7 @@ class Productos extends CI_Controller{
     public function agregar() {
 		if($this->input->is_ajax_request()) {
 			$this->form_validation->set_rules('nombreProducto', 'Nombre', 'required');
-			$this->form_validation->set_rules('costo', 'Costo', 'required');
+			$this->form_validation->set_rules('costo', 'Costo unitario', 'required');
             $this->form_validation->set_rules('precioPublico', 'Precio al Publico', 'required');
             $this->form_validation->set_rules('idProveedores', 'Proveedor', 'required');
             $this->form_validation->set_rules('numSerie', 'Numero de Serie', 'required');
@@ -59,7 +59,7 @@ class Productos extends CI_Controller{
             $this->form_validation->set_rules('modelo', 'Modelo', 'required');
 			$this->form_validation->set_rules('tipo', 'Tipo', 'required');
 			$this->form_validation->set_rules('existencia', 'Cantidad de productos', 'required');
-			$this->form_validation->set_rules('subtotal', 'Costo Total', 'required');
+			$this->form_validation->set_rules('subtotal', 'Total de Factura', 'required');
 			$this->form_validation->set_rules('serie', 'No. de serie de factura', 'required');
 			$this->form_validation->set_rules('folio', 'Folio de factura', 'required');
 			$this->form_validation->set_rules('fecha', 'Fecha', 'required');
@@ -133,7 +133,7 @@ class Productos extends CI_Controller{
     public function actualizarStock() {
 		if($this->input->is_ajax_request()) {
 			$this->form_validation->set_rules('total', 'total', 'required');
-			$this->form_validation->set_rules('subtotal', 'Costo Total', 'required');
+			$this->form_validation->set_rules('subtotal', 'Total de Factura', 'required');
 			$this->form_validation->set_rules('serie', 'No. de serie de facturatal', 'required');
 			$this->form_validation->set_rules('folio', 'Folio de factura', 'required');
 			$this->form_validation->set_rules('fecha', 'Fecha', 'required');
@@ -186,7 +186,7 @@ class Productos extends CI_Controller{
     public function actualizar() {
 		if($this->input->is_ajax_request()) {
 			$this->form_validation->set_rules('nombreProducto', 'Nombre', 'required');
-			$this->form_validation->set_rules('costo', 'Costo', 'required');
+			$this->form_validation->set_rules('costo', 'Costo unitario', 'required');
             $this->form_validation->set_rules('precioPublico', 'Precio al Publico', 'required');
             $this->form_validation->set_rules('idProveedores', 'Proveedor', 'required');
             $this->form_validation->set_rules('numSerie', 'Numero de Serie', 'required');

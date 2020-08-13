@@ -31,7 +31,7 @@
                             <input type="number" class="form-control" id="s_existenciaNueva" name="s_existenciaNueva">
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="s_subtotal">Costo Total</label>
+                            <label for="s_subtotal">Total de Factura</label>
                             <input type="number" class="form-control" id="s_subtotal" name="s_subtotal">
                         </div> 
                     </div>

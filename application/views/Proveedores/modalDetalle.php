@@ -3,7 +3,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header" style="background-color: #91c9e8">
-        <h5 class="modal-title" id="exampleModalLongTitle">Modificar Proveedor</h5>
+        <h5 class="modal-title" id="exampleModalLongTitle">Detalle Proveedor</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -15,11 +15,11 @@
                     <div class="form-group col-md-6">
                     <input type="number" class="form-control" id="d_id" name="d_id" style="display: none">
                         <label for="d_razonSocial">Razon Social</label>
-                        <input type="text" class="form-control" id="d_razonSocial" name="d_razonSocial">
+                        <input type="text" class="form-control" id="d_razonSocial" name="d_razonSocial" disabled>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="d_rfc">RFC</label>
-                        <input type="text" class="form-control" id="d_rfc" name="d_rfc">
+                        <input type="text" class="form-control" id="d_rfc" name="d_rfc" disabled>
                     </div>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="d_giro">Giro</label>
-                        <input type="text" class="form-control" id="d_giro" name="d_giro">
+                        <input type="text" class="form-control" id="d_giro" name="d_giro" disabled>
                     </div>
                 </div>
             </div>

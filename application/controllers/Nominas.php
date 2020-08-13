@@ -14,7 +14,7 @@ class Nominas extends CI_Controller {
 	public function index() {
 		if($this->session->userdata('is_logged')) {
 			$data['titulo'] = 'Nominas';
-			$data['empleados'] = $this->Colaboradores_modelo->obtenerEmpleados();
+			$data['empleados'] = $this->Colaboradores_modelo->obtenerEmpleadosActivos();
 			$this->load->view('Nominas/nominas', $data);
 		} else {
 			$this->load->view('login');
