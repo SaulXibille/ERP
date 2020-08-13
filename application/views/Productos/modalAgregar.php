@@ -68,7 +68,31 @@
                         <div class="form-group col-md-6">
                             <label for="existencia">Cantidad de productos</label>
                             <input type="text" class="form-control" id="existencia" name="existencia">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="subtotal">Costo Total</label>
+                            <input type="number" class="form-control" id="subtotal" name="subtotal">
                         </div>   
+                    </div>  
+                </div>
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="serie">No. de serie de factura</label>
+                            <input type="text" class="form-control" id="serie" name="serie">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="folio">Folio de factura</label>
+                            <input type="number" class="form-control" id="folio" name="folio">
+                        </div>   
+                    </div>  
+                </div>
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="fecha">Fecha</label>
+                            <input type="date" class="form-control" id="fecha" name="fecha">
+                        </div>
                     </div>  
                 </div>
             </form>

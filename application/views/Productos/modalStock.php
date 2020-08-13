@@ -14,6 +14,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <input type="number" class="form-control" id="s_id" name="s_id" style="display: none">
+                            <input type="number" class="form-control" id="s_idProveedores" name="s_idProveedores" style="display: none">
                             <label for="s_nombreProducto">Nombre</label>
                             <input type="text" class="form-control" id="s_nombreProducto" name="s_nombreProducto" disabled>
                         </div>
@@ -25,11 +26,35 @@
                 </div>
                 <div class="form-group">
                     <div class="form-row">
-                    <div class="form-group col-md-6">
+                        <div class="form-group col-md-6">
                             <label for="s_existenciaNueva">Cantidad a agregar</label>
                             <input type="number" class="form-control" id="s_existenciaNueva" name="s_existenciaNueva">
                         </div>
+                        <div class="form-group col-md-6">
+                            <label for="s_subtotal">Costo Total</label>
+                            <input type="number" class="form-control" id="s_subtotal" name="s_subtotal">
+                        </div> 
                     </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="s_serie">No. de serie de factura</label>
+                            <input type="text" class="form-control" id="s_serie" name="s_serie">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="s_folio">Folio de factura</label>
+                            <input type="number" class="form-control" id="s_folio" name="s_folio">
+                        </div>   
+                    </div>  
+                </div>
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="s_fecha">Fecha</label>
+                            <input type="date" class="form-control" id="s_fecha" name="s_fecha">
+                        </div>
+                    </div>  
                 </div>
             </form>
         </div>

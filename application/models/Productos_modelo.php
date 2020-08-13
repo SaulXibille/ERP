@@ -95,6 +95,10 @@ class Productos_modelo extends CI_Model {
         return $this->db->insert('productos', $data);
       }
 
+      public function agregarEgreso($dato) {
+        return $this->db->insert('egresos', $dato);
+      }
+
       public function cambiarStatus($idProducto,$status) {
         if($status == "desactivar") {
           $status = 0;
@@ -108,7 +112,7 @@ class Productos_modelo extends CI_Model {
       }
     
       public function modificarStock($idProducto) {
-        $this->db->select("produc.idProductos, produc.existencia, produc.nombreProducto");
+        $this->db->select("produc.idProductos, produc.existencia, produc.nombreProducto, produc.idProveedores");
         $this->db->from('productos produc');
         $this->db->where('idProductos', $idProducto);
         $res = $this->db->get();

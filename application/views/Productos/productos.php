@@ -170,8 +170,14 @@
     var tipo = $("#tipo").val();
     var proveedor = $("#proveedor").val();
     var existencia = $("#existencia").val();
+    var serie = $("#serie").val();
+    var folio = $("#folio").val();
+    var subtotal = $("#subtotal").val();
+    var proveedor = $("#proveedor").val();
+    var fecha = $("#fecha").val();
 
-    if(nombreProducto === "" || costo == 0 || precioPublico == 0 || numSerie === "" || marca === "" || modelo === "" || tipo === "" || proveedor == 0 || existencia == 0) {
+    if(nombreProducto === "" || costo == 0 || precioPublico == 0 || numSerie === "" || marca === "" || modelo === "" || tipo === "" || proveedor == 0 
+    || existencia == 0 || serie === "" || folio == 0 || subtotal == 0 || fecha ==="") {
       toastr["error"]("Completar todos los campos");
     } else {
       $.ajax({
@@ -187,6 +193,10 @@
           modelo: modelo,
           tipo: tipo,
           idProveedores: proveedor,
+          serie: serie,
+          folio: folio,
+          subtotal: subtotal,
+          fecha: fecha,
           existencia: existencia
         },
         success: function(data) {
@@ -344,9 +354,11 @@
         idProducto: idProducto
       },
       success: function(data) {
-        
+        console.log(data);
         $('#modalStock').modal('show');
         $('#s_id').val(data.post.idProductos);
+        $('#s_idProveedores').val(data.post.idProveedores);
+        console.log($('#s_idProveedores').val());
         $('#s_nombreProducto').val(data.post.nombreProducto);
         $('#s_existencia').val(data.post.existencia);
         
@@ -359,11 +371,15 @@
     e.preventDefault();
 
     var idProductos = $('#s_id').val();
+    var idProveedores = $('#s_idProveedores').val();
     var existencia = $('#s_existencia').val();
     var existenciaNueva = $('#s_existenciaNueva').val();
     var total = (parseInt(existencia) + parseInt(existenciaNueva));
-
-    console.log(total);
+    var subtotal = $('#s_subtotal').val();
+    var serie = $('#s_serie').val();
+    var folio = $('#s_folio').val();
+    var fecha = $('#s_fecha').val();
+    console.log(idProveedores);
 
     if(total == 0) {
       toastr["error"]("Completar todos los campos");
@@ -374,6 +390,11 @@
         dataType: "json",
         data: {
           idProductos: idProductos,
+          idProveedores: idProveedores,
+          subtotal: subtotal,
+          serie: serie,
+          folio: folio,
+          fecha: fecha,
           total: total
         },
         success: function(data) {
