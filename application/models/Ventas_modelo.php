@@ -55,6 +55,21 @@ class Ventas_modelo extends CI_Model {
       return 0;
     }
   }
+
+  public function filtrarVentasMes() {
+    $this->db->select('v.idVentas, v.fecha, v.subtotal, v.status, v.idEmpleados, e.nombres, e.apellidoP, e.apellidoM');
+    $this->db->from('ventas v');
+    $this->db->join('empleados e', 'v.idEmpleados = e.idEmpleados');
+    $this->db->order_by('MONTH(v.fecha)');
+    $res = $this->db->get();
+
+    if($res->num_rows() > 0) {
+      $r = $res->row();
+      return $res->result();
+    }else {
+      return 0;
+    }
+  }
   
   public function agregarVenta($data) {
     $this->db->insert('ventas', $data);

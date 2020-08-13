@@ -106,7 +106,7 @@ header p {
 	align-items: center;
 	flex-wrap: wrap;
 	/* border: 1px solid red; */
-	width: 250px;
+	width: 200px !important;
 	margin-bottom: 5px;
 }
 #filtroo label {
@@ -119,6 +119,31 @@ header p {
 	width: 125px;
 	margin: 5px 5px 5px 0;
 }
+
+#filtroo2 {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	/* border: 1px solid red; */
+	width: 230px !important;
+	margin-bottom: 5px;
+}
+#filtroo2 label {
+	display: block;
+	margin: 5px 5px 5px 0;
+}
+
+#filtroo2 select {
+	display: block;
+	width: 125px;
+	margin: 5px 5px 5px 0;
+}
+
+.row2 {
+	margin: auto !important;
+}
+
+
 
 /* #modalProductos {
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);

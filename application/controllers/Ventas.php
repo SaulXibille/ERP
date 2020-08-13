@@ -77,6 +77,19 @@ class Ventas extends CI_Controller {
 		}
 	}
 
+	public function filtrarVentasMes() {
+		if($this->input->is_ajax_request()) {
+			if($posts = $this->Ventas_modelo->filtrarVentasMes()){
+				$data = array('respuesta' => 'exito', 'posts' => $posts);
+			} else {
+				$data = array('respuesta' => 'error', 'mensaje' => 'No se encontro el registro');
+			}
+			echo json_encode($data);
+		} else {
+
+		}
+	}
+
 	public function agregar() {
 		if($this->input->is_ajax_request()) {
 			$this->form_validation->set_rules('subtotal', 'Subtotal', 'required');
