@@ -14,15 +14,26 @@
         Agregar
       </button>
     </div>
-    
-    <div id="filtroo">
-      <label for="filtro">Mostrar:</label>
-      <select class="form-control" id="filtro">
-        <option value="">Todos</option>
-        <option value="1">Vendidos</option>
-        <option value="0">Devueltos</option>
-      </select>
+
+    <div class="row row2">    
+      <div id="filtroo">
+        <label for="filtro">Mostrar:</label>
+        <select class="form-control" id="filtro">
+          <option value="">Todos</option>
+          <option value="1">Vendidos</option>
+          <option value="0">Devueltos</option>
+        </select>
+      </div>
+
+      <div id="filtroo2">
+        <label for="filtro_mes">Mostrar por:</label>
+        <select class="form-control" id="filtro_mes">
+          <option value="">Día</option>
+          <option value="1">Mes</option>  
+        </select>
+      </div>
     </div>
+    
         
     <div class="table-responsive">
       <table id="tabla" class="table table-striped table-bordered">
@@ -62,6 +73,35 @@
             status: valor
           },
           success: function(data) {
+              if(data.respuesta == 'error') {
+                toastr["error"]("No hay registros para mostrar");
+              } else {
+                for (var i = 0; i < data.posts.length; i++) {
+                  if (data.posts[i].status == 1) {
+                    data.posts[i].status = "Vendido";
+                  } else {
+                    data.posts[i].status = "Devuelto";
+                  }
+                }
+                $('#tabla').DataTable().destroy();
+                inicializarTabla(data);
+              }
+            }
+        });
+      }
+    });
+
+    $("#filtro_mes").on('change', function() {
+      var valor = $(this).val();
+      if(valor === "") {
+        obtenerVentas();
+      } else {
+        $.ajax({
+          url: "<?php echo base_url(); ?>Ventas/filtrarVentasMes",
+          type: "POST",
+          dataType: "json",
+          success: function(data) {
+            console.log(data);
               if(data.respuesta == 'error') {
                 toastr["error"]("No hay registros para mostrar");
               } else {
